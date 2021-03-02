@@ -1,11 +1,11 @@
 
-import Home from './components/Home';
+import Links from './components/Links';
 
 export const routes = [
   {
     path: '/',
-    component: Home,
-    label: 'Home',
+    component: Links,
+    label: 'Links',
     exact: true,
   },
 ];
