@@ -6,11 +6,13 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import './index.scss';
 
+const SEARCH_BAR_PLACEHOLDER = "Pueba Github, @HOME, Candidates...";
+
 const SearchLinks = () => (
   <Paper component="form" className='Navbar-search-links'>
     <InputBase
       className='Navbar-search-links-input'
-      placeholder="Pueba Github, @HOME, Candidates..."
+      placeholder={SEARCH_BAR_PLACEHOLDER}
       autoFocus={true}
     />
     <SearchIcon className='Navbar-search-links-icon'/>
