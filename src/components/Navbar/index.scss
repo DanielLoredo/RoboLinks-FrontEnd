@@ -1,0 +1,55 @@
+
+@import '../colors';
+@import './variables';
+
+.Navbar {
+  background-color: $color-black;
+  padding: 0 50px;
+  height: $navbar-height;
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  // Hide elements that exceed the size of the navbar
+  // (useful to display the roborregos logo)
+  overflow: hidden;
+
+  .Navbar-logo {
+    width: 297px;
+  }
+
+  .Navbar-search-links {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;  
+    padding: 15px;    
+    padding-left: 35px;    
+    width: 600px;
+    height: 50px;
+    border-radius: 30px;
+    border: 3px $color-baby-blue solid;
+    background-color: transparent;
+
+    .Navbar-search-links-input {
+      color: white;
+      font-size: 20px;
+      width: 100%; 
+    }
+    .Navbar-search-links-icon {
+      color: $color-baby-blue;
+      width: 34px;
+      height: 34px;       
+    }
+  }  
+
+  .Navbar-avatar {
+    color: $color-baby-blue;
+    height: 50px;
+    width: 50px;
+    // Avoid sizes to shrink when few space left
+    min-height: 50px;
+    min-width: 50px;
+  }
+}
