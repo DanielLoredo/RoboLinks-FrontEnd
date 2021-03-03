@@ -1,0 +1,27 @@
+
+@import '../colors';
+@import '../Navbar/variables';
+
+$links-viewport-height: calc(
+  100vh - #{$navbar-height}
+);
+
+.Links {
+  background-color: $color-oxford-blue;
+  padding: 50px 130px;
+  height: $links-viewport-height;
+  width: 100%;
+  position: relative;
+
+  .Links-add-button {
+    position: absolute;
+    right: 35px;
+    bottom: 35px;
+    padding: 0px;
+  }
+  .Links-add-icon {
+    color: $color-baby-blue;
+    width: 85px;
+    height: 85px;
+  }
+}
