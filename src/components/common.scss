@@ -1,0 +1,9 @@
+
+
+// Animation to make the color of the element darker on hover.
+.darken-on-hover {
+  transition: filter 0.1s;
+  &:hover {
+    filter: brightness(85%);
+  }
+}
