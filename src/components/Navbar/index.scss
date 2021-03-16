@@ -17,7 +17,9 @@
   overflow: hidden;
 
   .Navbar-logo {
-    width: 297px;
+    // By setting the width, the height is adjusted
+    // automatically to avoid distortionating the image    
+    width: 300px;
   }
 
   .Navbar-search-links {
