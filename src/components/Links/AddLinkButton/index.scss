@@ -1,0 +1,20 @@
+
+@import '../../colors';
+
+$add-link-icon-size: 85px;
+
+
+// NOTE: Prefix Links is needed to provide enough specificity
+.Links .Links-add-button {
+  padding: 0px;
+  // Place button always at the same bottom-right corner
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+
+  .Links-add-icon {
+    color: $color-baby-blue;
+    width: $add-link-icon-size;
+    height: $add-link-icon-size;
+  }
+}
