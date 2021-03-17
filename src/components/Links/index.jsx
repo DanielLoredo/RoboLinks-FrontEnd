@@ -1,15 +1,29 @@
 
 import React from "react";
-import { AddCircle } from '@material-ui/icons';
-import IconButton from '@material-ui/core/IconButton';
 
 import './index.scss';
 
+import LinkCard from './LinkCard';
+import AddLinkButton from './AddLinkButton';
+
+import { MOCKED_LINKS } from './MOCKED_LINKS';
+
 const Links = () => (
   <div className="Links">
-    <IconButton aria-label="add-link" className="Links-add-button">
-      <AddCircle alt="Add link icon" className="Links-add-icon"/>
-    </IconButton>
+    <div className="Links-container">
+      {/* TODO: replace MOCKED_LINKS with real links data */}
+      {MOCKED_LINKS?.map(({ name, image, url, tags }, index) => (
+        <LinkCard
+          // Create unique key (in case 2 equal urls are given) 
+          key={`${index}-${url}`}
+          name={name}
+          image={image}
+          url={url}
+          tags={tags}
+        />
+      ))}
+    </div>
+    <AddLinkButton />
   </div>
 );
 

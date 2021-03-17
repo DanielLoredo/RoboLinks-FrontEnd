@@ -1,9 +1,15 @@
 
+@import './colors.scss';
+@import './common.scss';
+
 * {
   box-sizing: border-box;
 }
 
 body {
+  // This background-color is needed to be able to provide the
+  // styled opacity to the sticky Navbar
+  background-color: $color-black;
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 14px;

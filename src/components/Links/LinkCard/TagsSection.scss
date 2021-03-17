@@ -1,0 +1,32 @@
+
+@import './variables.scss';
+@import '../../colors';
+
+
+.Links-card-tags-section {
+  width: 100%;
+  padding: 0 $card-section-horizontal-padding;
+  // Flex
+  display: flex;
+  justify-content: flex-start;
+  align-items: center; 
+
+  .Links-card-tag   {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: $color-black;   
+    background-color: $color-baby-blue;
+    // TODO: this max-width assumes a maximum of 3 tags are given
+    max-width: 33%;
+    // Truncate text
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;      
+
+    // Add margin-right to all tags but last one
+    &:not(:last-of-type) {
+      margin-right: 10px;
+    }      
+  }
+}

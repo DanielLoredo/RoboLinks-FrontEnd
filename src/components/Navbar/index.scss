@@ -7,17 +7,24 @@
   padding: 0 50px;
   height: $navbar-height;
   width: 100%;
-
+  // Flex
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   // Hide elements that exceed the size of the navbar
   // (useful to display the roborregos logo)
   overflow: hidden;
+  // Sticky behavior
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0px;
+  z-index: 1;
+  opacity: 0.9;
 
   .Navbar-logo {
-    width: 297px;
+    // By setting the width, the height is adjusted
+    // automatically to avoid distortionating the image    
+    width: 300px;
   }
 
   .Navbar-search-links {
