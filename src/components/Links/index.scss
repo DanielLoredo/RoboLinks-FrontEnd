@@ -8,9 +8,9 @@ $links-viewport-height: calc(
 );
 
 
-.Links {
+.Links-section {
   background-color: $color-oxford-blue;
-  width: 100%;  
+  width: 100%;
   // Height is at least as big as the viewport-height, but may 
   // grow bigger if all link-cards don't fit in viewport-height  
   min-height: $links-viewport-height;    
@@ -18,17 +18,49 @@ $links-viewport-height: calc(
 
   .Links-container { 
     margin: 0 auto;    
-    padding: 50px 130px;
-    width: 100%;   
-    // Grid styling.
-      // - Grid vertical-size is set to 'auto-fit' to create as much rows as needed,
-      // but the horizontal-size is set to minimum the size of one link-card
-      // and maximum the size of the Link-Container.
-      // - The amount of columns created will depend on the size of the screen of the user.
+    padding: 50px;
+    width: 100%;     
+    
+  // CSS Grid
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax($link-card-width, max-content));
-    grid-row-gap: 25px;
-    grid-column-gap: 50px;
-    justify-content: center; 
+    // Dynamic number of columns in row (according to available width)
+    // Every column has a width equal to ($link-big-card-width / 2)
+    grid-template-columns: repeat(auto-fit,  minmax($link-big-card-width / 2, max-content));
+    // The size of every row is the height of the small link card,
+    // this allows 2 small cards to be parallel to 1 big/medium card,
+    // otherwise, only 1 small card would fit centered in the available height
+    grid-auto-rows: $link-small-card-height;
+    grid-column-gap: 20px;
+    grid-row-gap: 30px;
+    // Center grid (when there is width left)
+    justify-content: center;
+    // Center every card inside their dedicated grid space,
+    // helpful when width of card takes less than the dedicated grid space
+    .Links-card { 
+      justify-self: center;
+    }    
+    // Every big/medium card is given the height of 2 rows and width of 2 columns.
+    //      - Big cards use all the dedicated width and height space.
+    //      - Medium use all the dedicated height, but have width left available
+    //        (medium cards are centered inside the dedicated width),
+    .Links-card.Links-card--big,
+    .Links-card.Links-card--medium { 
+      grid-row: span 2;
+      grid-column: span 2;
+    }       
+    // Every small card is given the height of 1 row and width of 3 columns.
+    //      - Small cards use all the dedicated height and width space.  
+    .Links-card.Links-card--small { 
+      grid-row: span 1;
+      grid-column: span 3;
+    }        
+
+  // CSS Grid for mobile and other small devices
+    @media screen and (max-width: 820px) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   }  
 }
