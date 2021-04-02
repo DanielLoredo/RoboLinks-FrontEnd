@@ -1,6 +1,6 @@
 
-@import '../colors';
-@import './variables';
+@import '/src/components/colors.scss';
+@import './variables.scss';
 
 .Navbar {
   background-color: $color-black;

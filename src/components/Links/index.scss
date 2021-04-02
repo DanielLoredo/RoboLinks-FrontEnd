@@ -1,6 +1,6 @@
 
-@import '../colors';
-@import '../Navbar/variables';
+@import '/src/components/colors.scss';
+@import '../Navbar/variables.scss';
 @import './LinkCard/variables.scss';
 
 $links-viewport-height: calc(
