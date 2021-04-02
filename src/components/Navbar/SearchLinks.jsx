@@ -6,7 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import './index.scss';
 
-const SEARCH_BAR_PLACEHOLDER = "Pueba Github, @HOME, Candidates...";
+const SEARCH_BAR_PLACEHOLDER = "Pueba GitHub, @HOME, Candidates...";
 
 const SearchLinks = () => (
   <Paper component="form" className='Navbar-search-links'>
