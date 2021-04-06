@@ -1,0 +1,50 @@
+
+@import '../colors';
+
+.LinkForm {
+  background-color: $color-oxford-blue;
+  border-radius: 15px;
+  width: 50%;
+  height: auto;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 3%;
+  color: #79B3CC;
+
+  .text-field { 
+    margin: 0 auto;
+    justify-content: center;
+    color: white;
+    border-color: 'red';
+    width: 100%;
+  }
+
+  .icon-btn {
+    color: #E5E5E5;
+    padding: 0;
+    margin: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .switch-private {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  p {
+    color:greenyellow;
+    padding: 0;
+    border: 0;
+    text-align: center;
+  }
+}
+
+// .LinkForm:focus {
+//   background-color: red;
+// }
