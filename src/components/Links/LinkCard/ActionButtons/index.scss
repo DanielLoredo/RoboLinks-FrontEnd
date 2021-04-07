@@ -1,33 +1,26 @@
 
-@import './variables.scss';
+@import '../variables.scss';
 
 
-.Links-card-url-section {
-  width: 100%;
-  padding: 0 $card-section-horizontal-padding;
+.Links-card-action-buttons {
+  min-width: $action-buttons-width;
+  max-width: $action-buttons-width;
   // Flex
   display: flex;
-  justify-content: space-between;
-  align-items: center;    
+  justify-content: flex-start;
+  align-items: center;
 
-  .Links-card-url {
-    color: white;
-    font-size: 16px;
-    text-align: left;
-    width: 100%
-  }
   .Links-card-url-edit-button,
   .Links-card-url-copy-button {
     padding: 0px;
+    margin-left: 8px;
     // Scale hover animation
     transition: transform 0.1s;
     &:hover {
       transform: scale(1.05);
     }      
   }
-  .Links-card-url-copy-button {
-    margin-left: 10px;
-  }    
+
   .Links-card-url-edit-icon,
   .Links-card-url-copy-icon {
     color: white;

@@ -1,11 +1,11 @@
 
-@import '../../colors';
+@import '/src/components/colors.scss';
 
 $add-link-icon-size: 85px;
 
 
-// NOTE: Prefix Links is needed to provide enough specificity
-.Links .Links-add-button {
+// NOTE: Prefix Links-section is needed to provide enough specificity
+.Links-section .Links-add-button {
   padding: 0px;
   // Place button always at the same bottom-right corner
   position: fixed;
