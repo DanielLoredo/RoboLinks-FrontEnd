@@ -174,6 +174,11 @@ const useStyles2 = makeStyles((theme) => ({
     },
     '& .MuiTab-root': {
       minWidth: "100%",
+      borderRadius: "30px",
+      border:  '2px solid #79B3CC',
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
     },
   },
   tabs: {
@@ -195,8 +200,8 @@ export default function CreateLinkForm() {
   const classes = useStyles();
   const classes2 = useStyles2();
 
-  const tag_color = ["#97DFFC", "black"]
-  const tag_text = ["black", "#97DFFC"]
+  const tag_color = ["transparent", "#97DFFC"]
+  const tag_text = ["#97DFFC", "#101935"]
 
   // const [value, setValue] = React.useState(0);
   const [selected, setSelected] = React.useState(new Array(link_tags.length).fill(0));
@@ -272,10 +277,9 @@ export default function CreateLinkForm() {
                   scrollButtons="off"
                 >
                   { link_tags.map((tag, id) => (
-                  <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected[id]], color: tag_text[selected[id]]}}/>
-                  ))}
+                    <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected[id]], color: tag_text[selected[id]], margin: "1vh 0 0 0"}}/>))}
                 </Tabs>
-            </div>
+              </div>
           </Grid>
           <Grid container item spacing={0} xs={6}>
             <Grid item xs={6}>
