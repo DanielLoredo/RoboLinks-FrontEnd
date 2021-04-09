@@ -20,6 +20,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+const blue_color = "#97DFFC";
+
 const link_tags = [
   "Github",
   "Presentation",
@@ -28,9 +30,9 @@ const link_tags = [
   "YouTube",
   "Sponsors",
   "Electronics",
-  "Progra",
-  "Mecánica",
-  "Competencia",
+  "Programming",
+  "Mechanics",
+  "Competition",
   "Side-project",
   "Docs",
   "Candidates",
@@ -56,71 +58,40 @@ const theme = createMuiTheme({
 
 const CssTextField = withStyles({
   root: {
-    '& label.Mui-focused': {
-      color: '#79B3CC',
-    },
-    '& label.Mui-root': {
-      color: '#79B3CC',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#79B3CC',
-      color: '#79B3CC',
-    },
+    color: '#79B3CC',
     '& .MuiInput-underline': {
       color: '#79B3CC',
     },
     '& .MuiInput-input:disabled': {
-      color: '#79B3CC',
       borderBottom: '2px solid #79B3CC',
-    },
-    '.MuiInput-root': {
-      color: "white",
-      borderColor: '#79B3CC',
-    },
-    '& .MuiInput-root': {
-      color: "white",
-      borderColor: '#79B3CC',
-    },
-    '& .Mui-focused': {
-      color: "white",
-    },
-    '& .Mui-root': {
-      color: "white",
     },
     '& .MuiInputLabel-root': {
       color: "#79B3CC",
     },
     '& .MuiOutlinedInput-root': {
       color: "white",
-      borderColor: '#79B3CC',
       '& fieldset': {
         borderColor: '#79B3CC',
-        color: '#79B3CC',
-      },
-      '& label': {
-        color: '#79B3CC',
       },
       '&:hover fieldset': {
         borderColor: '#79B3CC',
-        color: '#79B3CC',
       },
       '&.Mui-focused fieldset': {
         borderColor: '#79B3CC',
-        color: '#79B3CC',
       },
     },
   },
 })(TextField);
 
 const PrivateSwitch = withStyles({
-  fontSize: 80,
+  height: "10vh",
   switchBase: {
-    color: 'cyan',
+    color: "#6b98a8",
     '&$checked': {
-      color: 'cyan',
+      color: blue_color,
     },
     '&$checked + $track': {
-      backgroundColor: 'cyan',
+      backgroundColor: '#E5E5E5',
     },
   },
   checked: {},
@@ -133,16 +104,14 @@ function TabPanel(props) {
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
+      styles={{backgroundColor: "white"}}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+    <Box p={3}>
+      <Typography>{children}</Typography>
+    </Box>
     </div>
   );
 }
@@ -163,14 +132,14 @@ function a11yProps(index) {
 const useStyles2 = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: '#101935',
+    // backgroundColor: 'white',
     display: 'flex',
-    height: "19vh",
-    color: "#79B3CC",
-    borderColor: '#79B3CC',
+    height: "25vh",
+    overflow: "auto",
     width: "100%",
     '& .MuiTabs-scroller': {
       color: 'black',
+      overflow: "auto",
     },
     '& .MuiTab-root': {
       minWidth: "100%",
@@ -179,7 +148,12 @@ const useStyles2 = makeStyles((theme) => ({
       display: "block",
       marginLeft: "auto",
       marginRight: "auto",
+      height: "3vh",
     },
+    '& .MuiTabs-scrollButtons': {
+      // backgroundColor: "red",
+      height: "3vh",
+    }
   },
   tabs: {
     width: "100%",
@@ -200,8 +174,8 @@ export default function CreateLinkForm() {
   const classes = useStyles();
   const classes2 = useStyles2();
 
-  const tag_color = ["transparent", "#97DFFC"]
-  const tag_text = ["#97DFFC", "#101935"]
+  const tag_color = ["transparent", blue_color]
+  const tag_text = [blue_color, "#101935"]
 
   // const [value, setValue] = React.useState(0);
   const [selected, setSelected] = React.useState(new Array(link_tags.length).fill(0));
@@ -232,7 +206,7 @@ export default function CreateLinkForm() {
           <Grid item xs={12}>
             <CssTextField
               className={classes.root}
-              label="Link title"
+              label="Link Title"
               variant="outlined"
               id="link-title-input"
             />
@@ -245,7 +219,7 @@ export default function CreateLinkForm() {
               id="url-input"
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <CssTextField
               className={classes.root}
               label="Short URL"
@@ -257,7 +231,7 @@ export default function CreateLinkForm() {
               id="shorturl-readonly"
             />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={9}>
             <CssTextField
               className={classes.root}
               variant= "outlined"
@@ -274,7 +248,7 @@ export default function CreateLinkForm() {
                   onChange={handleChangeTag}
                   aria-label="Vertical tabs example"
                   className={classes2.tabs}
-                  scrollButtons="off"
+                  scrollButtons="on"
                 >
                   { link_tags.map((tag, id) => (
                     <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected[id]], color: tag_text[selected[id]], margin: "1vh 0 0 0"}}/>))}
@@ -305,7 +279,7 @@ export default function CreateLinkForm() {
             </Grid>
             <Grid item xs={6}>
               <IconButton aria-label="delete" className="single-icon-btn" onClick={submitForms}>
-                <CheckCircleIcon style={{ fontSize: 60, color: "#97DFFC" }}/>
+                <CheckCircleIcon style={{ fontSize: 60, color: blue_color}}/>
               </IconButton>
             </Grid>
           </Grid>
