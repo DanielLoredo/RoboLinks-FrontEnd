@@ -3,13 +3,10 @@ import TextField from '@material-ui/core/TextField';
 import './index.scss';
 import Grid from '@material-ui/core/Grid';
 import {
-  ThemeProvider,
   withStyles,
   makeStyles,
-  createMuiTheme,
 } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import WallpaperIcon from '@material-ui/icons/Wallpaper';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -25,7 +22,7 @@ const blue_color = "#97DFFC";
 const link_tags = [
   "Github",
   "Presentation",
-  "Classes/Workshops",
+  "Classes/ Workshops",
   "Social",
   "YouTube",
   "Sponsors",
@@ -45,20 +42,10 @@ const link_tags = [
   "Robocup",
 ]
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: 'cyan',
-      light: '#757ce8',
-      dark: '#002884',
-      contrastText: '#fff',
-    }
-  },
-});
-
 const CssTextField = withStyles({
   root: {
     color: '#79B3CC',
+    borderColor: '#79B3CC',
     '& .MuiInput-underline': {
       color: '#79B3CC',
     },
@@ -76,8 +63,8 @@ const CssTextField = withStyles({
       '&:hover fieldset': {
         borderColor: '#79B3CC',
       },
-      '&.Mui-focused fieldset': {
-        borderColor: '#79B3CC',
+      '& .Mui-disabled': {
+        backgroundColor: 'black',
       },
     },
   },
@@ -132,7 +119,6 @@ function a11yProps(index) {
 const useStyles2 = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // backgroundColor: 'white',
     display: 'flex',
     height: "25vh",
     overflow: "auto",
@@ -149,9 +135,11 @@ const useStyles2 = makeStyles((theme) => ({
       marginLeft: "auto",
       marginRight: "auto",
       height: "3vh",
+      
+      lineHeight: '90%',
+      backgroundColor: 'red',
     },
     '& .MuiTabs-scrollButtons': {
-      // backgroundColor: "red",
       height: "3vh",
     }
   },
@@ -168,36 +156,76 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#79B3CC',
     width: "100%",
   },
+  input: {
+    display: 'none',
+  }
 }));
 
-export default function CreateLinkForm() {
+export default function CreateLinkForm(props) {
   const classes = useStyles();
   const classes2 = useStyles2();
 
   const tag_color = ["transparent", blue_color]
   const tag_text = [blue_color, "#101935"]
 
-  // const [value, setValue] = React.useState(0);
-  const [selected, setSelected] = React.useState(new Array(link_tags.length).fill(0));
+  const [link_data, setLinkData] = React.useState(props.link_data);
+
+  const getDefinedTags = () =>{
+    var tags = new Array(link_tags.length).fill(0)
+    for (var i = 0; i<link_data.tags.length; i++) {
+      tags[link_tags.indexOf(link_data.tags[i])] = 1
+    }
+    return tags
+  }
+
+  const [private_button_state, setPrivateButtonState] = React.useState(false);
+
+  const [selected_tag, setSelectedTag] = React.useState(getDefinedTags());
 
   const handleChangeTag = (event, newValue) => {
-    var new_array = [...selected]
+    var new_array = [...selected_tag]
     new_array[newValue] = (new_array[newValue] === 0) ? 1 : 0;
-    setSelected(new_array)
+    setSelectedTag(new_array)
   };
 
-  const [state, setState] = React.useState({
-    checkedA: false,
-    checkedB: false,
-    checkedC: false,
-  });
-
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  const handleChangePrivateSwitch = (event) => {
+    setPrivateButtonState(!private_button_state);
   };
 
-  const submitForms = (event, newValue) => {
-    alert("form submitted")
+  const handleChangeTitle = (event) => {
+    var update = link_data
+    update.title = event.target.value
+    setLinkData(update);
+  };
+
+  const handleChangeURL = (event) => {
+    var update = link_data
+    update.URL = event.target.value
+    setLinkData(update);
+  };
+
+  const handleChangeShortLink = (event) => {
+    var update = link_data
+    update.short_link = event.target.value
+    setLinkData(update);
+  };
+
+  const deleteForm = () => {
+    alert("Delete data")
+  }
+
+  const submitForms = (event) => {
+    var tags = []
+    for (var i = 0; i<selected_tag.length; i++) {
+      if (selected_tag[i]){
+        tags.push(link_tags[i])
+      }
+    }
+    var update = link_data
+    update.tags = tags
+    update.private = private_button_state
+    var str = JSON.stringify(link_data, null, 4);
+    alert(str)
   };
 
   return (
@@ -209,6 +237,8 @@ export default function CreateLinkForm() {
               label="Link Title"
               variant="outlined"
               id="link-title-input"
+              defaultValue={link_data.title}
+              onChange={handleChangeTitle}
             />
           </Grid>
           <Grid item xs={12}>
@@ -217,9 +247,12 @@ export default function CreateLinkForm() {
               label="URL"
               variant="outlined"
               id="url-input"
+              defaultValue={link_data.URL}
+              disabled={link_data? true: false}
+              onChange={handleChangeURL}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <CssTextField
               className={classes.root}
               label="Short URL"
@@ -231,11 +264,13 @@ export default function CreateLinkForm() {
               id="shorturl-readonly"
             />
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={6} md={9}>
             <CssTextField
               className={classes.root}
               variant= "outlined"
               id="shorturl-input"
+              defaultValue={link_data.short_link}
+              onChange={handleChangeShortLink}
             />
           </Grid>
           <Grid item xs={6} className='tags'>
@@ -251,19 +286,22 @@ export default function CreateLinkForm() {
                   scrollButtons="on"
                 >
                   { link_tags.map((tag, id) => (
-                    <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected[id]], color: tag_text[selected[id]], margin: "1vh 0 0 0"}}/>))}
+                    <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected_tag[id]], color: tag_text[selected_tag[id]], margin: "1vh 0 0 0"}}/>))}
                 </Tabs>
               </div>
           </Grid>
           <Grid container item spacing={0} xs={6}>
             <Grid item xs={6}>
               <p className='icon-tag'>Subir imagen</p>
-              <IconButton aria-label="add-image" className="icon-btn">
-                <WallpaperIcon style={{ fontSize: 40 }}/>
-              </IconButton>
+              <input accept="image/*" className={classes.input} id="icon-button-file" type="file"/>
+              <label htmlFor="icon-button-file">
+                <IconButton aria-label="upload-image" className="icon-btn" component="span">
+                  <WallpaperIcon style={{ fontSize: 40 }}/>
+                </IconButton>
+              </label>
             </Grid>
             <Grid item xs={6}>
-              <IconButton aria-label="delete" className="single-icon-btn">
+              <IconButton aria-label="delete" className="single-icon-btn" onClick={deleteForm}>
                 <DeleteIcon style={{ fontSize: 60 }}/>
               </IconButton>
             </Grid>
@@ -271,14 +309,14 @@ export default function CreateLinkForm() {
               <p className='icon-tag'>Privado</p>
               <div className="switch-private">
                 <PrivateSwitch
-                  checked={state.checkedA}
-                  onChange={handleChange}
+                  checked={private_button_state}
+                  onChange={handleChangePrivateSwitch}
                   name="checkedA"
                   />
               </div>
             </Grid>
             <Grid item xs={6}>
-              <IconButton aria-label="delete" className="single-icon-btn" onClick={submitForms}>
+              <IconButton aria-label="submit" className="single-icon-btn" onClick={submitForms}>
                 <CheckCircleIcon style={{ fontSize: 60, color: blue_color}}/>
               </IconButton>
             </Grid>

@@ -6,6 +6,7 @@ import CreateLinkForm from '../../CreateLinkForm'
 import Modal from '@material-ui/core/Modal';
 import './index.scss';
 import { makeStyles } from '@material-ui/core/styles';
+import link_data from './data.json'
 
 function getModalStyle() {
   const top = 50;
@@ -59,7 +60,7 @@ export default function AddLinkButton(){
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
     >
-        <CreateLinkForm/>
+        <CreateLinkForm link_data={link_data}/>
     </Modal>
   </>
   )
