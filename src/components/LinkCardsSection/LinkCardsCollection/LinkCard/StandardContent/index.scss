@@ -1,5 +1,9 @@
 
-@import '../index.scss';
+@import '../variables.scss';
+
+// Big- and Medium-size cards
+$standard-card-horizontal-padding: 20px;
+$standard-card-vertical-padding: 10px;
 
 
 .Links-card.Links-card--big,

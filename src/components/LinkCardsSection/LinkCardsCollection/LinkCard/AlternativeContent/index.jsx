@@ -12,6 +12,7 @@ const AlternativeCardContent = ({ name, url, tags, handleCopySnackbar }) => (
     <div className="Links-card-description">
       <span className="Links-card-name truncate-text--single-line">{name}</span>
       <span className="Links-card-url truncate-text--single-line">{url}</span>    
+      <CardTags tags={tags}/>
     </div>
     <CardTags tags={tags}/>
     <CardActionButtons
