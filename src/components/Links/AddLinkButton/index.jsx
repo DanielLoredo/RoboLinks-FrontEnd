@@ -60,7 +60,7 @@ export default function AddLinkButton(){
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
     >
-        <CreateLinkForm link_data={link_data}/>
+        <CreateLinkForm />
     </Modal>
   </>
   )

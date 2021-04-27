@@ -168,17 +168,19 @@ export default function CreateLinkForm(props) {
   const tag_color = ["transparent", blue_color]
   const tag_text = [blue_color, "#101935"]
 
-  const [link_data, setLinkData] = React.useState(props.link_data);
+  const [link_data, setLinkData] = React.useState(props.link_data ? props.link_data : null);
 
   const getDefinedTags = () =>{
     var tags = new Array(link_tags.length).fill(0)
-    for (var i = 0; i<link_data.tags.length; i++) {
-      tags[link_tags.indexOf(link_data.tags[i])] = 1
+    if (link_data) {
+      for (var i = 0; i<link_data.tags.length; i++) {
+        tags[link_tags.indexOf(link_data.tags[i])] = 1
+      }
     }
     return tags
   }
 
-  const [private_button_state, setPrivateButtonState] = React.useState(false);
+  const [private_button_state, setPrivateButtonState] = React.useState(props.link_data ? props.link_data.private : null);
 
   const [selected_tag, setSelectedTag] = React.useState(getDefinedTags());
 
@@ -237,7 +239,7 @@ export default function CreateLinkForm(props) {
               label="Link Title"
               variant="outlined"
               id="link-title-input"
-              defaultValue={link_data.title}
+              defaultValue={link_data ?link_data.title:""}
               onChange={handleChangeTitle}
             />
           </Grid>
@@ -247,7 +249,7 @@ export default function CreateLinkForm(props) {
               label="URL"
               variant="outlined"
               id="url-input"
-              defaultValue={link_data.URL}
+              defaultValue={link_data ?link_data.URL:""}
               disabled={link_data? true: false}
               onChange={handleChangeURL}
             />
@@ -269,7 +271,7 @@ export default function CreateLinkForm(props) {
               className={classes.root}
               variant= "outlined"
               id="shorturl-input"
-              defaultValue={link_data.short_link}
+              defaultValue={link_data ? link_data.short_link:null}
               onChange={handleChangeShortLink}
             />
           </Grid>
