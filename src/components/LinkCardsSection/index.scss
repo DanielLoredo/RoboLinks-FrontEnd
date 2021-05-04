@@ -1,0 +1,29 @@
+
+@import '/src/components/colors.scss';
+@import '/src/components/media-queries-triggers.scss';
+@import '../Navbar/variables.scss';
+
+$links-viewport-height: calc(
+  100vh - #{$navbar-height}
+);
+
+
+.Links-section {
+  background-color: $color-oxford-blue;
+  width: 100%;
+  // Height is at least as big as the viewport-height, but may 
+  // grow bigger if all link-cards don't fit in viewport-height  
+  min-height: $links-viewport-height;    
+  position: relative;  
+  padding: 50px 100px;
+
+  .Links-container { 
+    margin: 0 auto;    
+    width: 100%;
+    max-width: 1700px;
+  }  
+
+  @media screen and (max-width: $screen-width--mobile) {
+    padding: 30px 50px;    
+  }   
+}

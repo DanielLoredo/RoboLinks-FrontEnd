@@ -1,0 +1,77 @@
+
+@import '/src/components/media-queries-triggers.scss';
+@import '../variables.scss';
+
+// Card tags
+$alternative-card-tags-width: 220px;
+// Card description
+$alternative-card-description-margin-right: 10px;
+$alternative-card-description-width: calc(
+  100% - #{
+    $alternative-card-description-margin-right +
+    $alternative-card-tags-width +
+    $action-buttons-width
+  }
+);
+$alternative-card-description-width--small: calc(
+  100% - #{
+    $alternative-card-description-margin-right +
+    $action-buttons-width
+  }
+);
+
+
+.Links-card.Links-card--small {
+  padding: 15px 30px;
+  // Flex
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .Links-card-description {
+    width: $alternative-card-description-width;
+    height: 100%;
+    margin-right: $alternative-card-description-margin-right;
+    // Flex
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    .Links-card-name {
+      text-align: left;
+    }
+    .Links-card-tags {
+      display: none;
+      justify-content: flex-start;
+    }     
+  }
+  .Links-card-tags {
+    width: $alternative-card-tags-width;
+    // Center tags
+    justify-content: center;              
+    .Links-card-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+    }   
+  }    
+
+  @media screen and (max-width: $screen-width--desktop-medium) {
+    padding: 12px 20px;
+    .Links-card-description {
+      width: $alternative-card-description-width--small;
+      // Hide tags component only for small desktop screens
+      .Links-card-url {
+        display: none;
+      }
+      // Show tags component only for small desktop screens
+      .Links-card-tags {
+        display: flex;
+      }     
+    }
+    .Links-card-tags {
+      display: none;
+      width: 100%;
+    }      
+  }
+}  

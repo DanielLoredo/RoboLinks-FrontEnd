@@ -1,11 +1,11 @@
 
-import Links from './components/Links';
+import LinkCardsSection from './components/LinkCardsSection';
 
 export const routes = [
   {
     path: '/',
-    component: Links,
-    label: 'Links',
+    component: LinkCardsSection,
+    label: 'LinkCardsSection',
     exact: true,
   },
 ];

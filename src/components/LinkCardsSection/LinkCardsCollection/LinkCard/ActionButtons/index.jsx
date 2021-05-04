@@ -24,18 +24,6 @@ const LinkCardActionButtons = ({ url, handleCopySnackbar }) => {
 
   return (
     <div className="Links-card-action-buttons">
-      <Tooltip title="Edit" placement="top" enterDelay={200} arrow={true}>
-        <IconButton 
-          className="Links-card-url-edit-button"        
-          onClick={editUrl}
-          aria-label="edit-link" 
-        >
-          <Edit 
-            className="Links-card-url-edit-icon darken-on-hover" 
-            alt="Edit link url"
-          />
-        </IconButton>
-      </Tooltip>
       <Tooltip title="Copy link" placement="top" enterDelay={200} arrow={true}>
         <IconButton 
           className="Links-card-url-copy-button"
@@ -45,6 +33,18 @@ const LinkCardActionButtons = ({ url, handleCopySnackbar }) => {
           <FileCopy 
             className="Links-card-url-copy-icon darken-on-hover" 
             alt="Copy link url"
+          />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Edit" placement="top" enterDelay={200} arrow={true}>
+        <IconButton 
+          className="Links-card-url-edit-button"        
+          onClick={editUrl}
+          aria-label="edit-link" 
+        >
+          <Edit 
+            className="Links-card-url-edit-icon darken-on-hover" 
+            alt="Edit link url"
           />
         </IconButton>
       </Tooltip>

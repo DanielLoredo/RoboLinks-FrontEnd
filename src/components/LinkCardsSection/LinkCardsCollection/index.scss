@@ -1,0 +1,82 @@
+
+@import '/src/components/colors.scss';
+@import '/src/components/media-queries-triggers.scss';
+@import './LinkCard/variables.scss';
+
+
+.Big-cards-container {
+  margin-bottom: 50px;
+  // Flex
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // Add margin-right to all big-cards except the last one
+  .Links-card.Links-card--big:not(:last-of-type) {
+    margin-right: 50px;
+  }
+}
+
+
+.Medium-cards-container {
+  margin: 0 auto;
+  margin-bottom: 40px;
+  position: relative;
+  // Fit-width to place carrousel arrows right before the first
+  // card and right after the last card.
+  width: fit-content;   
+  // Flex
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  // Add horizontal margin to all medium-cards
+  .Links-card.Links-card--medium {
+    margin: 0 20px;
+  }
+  // Both right and left carrousel-buttons look the same
+  .Navigate-left-button,
+  .Navigate-right-button {
+    padding: 0px;
+    position: absolute;
+    .Navigate-right-icon,
+    .Navigate-left-icon {
+      color: $color-baby-blue;
+      width: 50px;
+      height: 50px;
+    }
+  }
+  // Place left carrousel-button before first link-card
+  .Navigate-left-button {
+    left: -50px;
+  }     
+  // Place right carrousel-button after first link-card
+  .Navigate-right-button {
+    right: -50px;
+  }      
+  .Cards-carrousel-container {
+    // Hide extra link-cards to have visibility of 
+    // the only those cards that fit inside the container.
+    overflow: hidden;        
+    .Cards-carrousel {
+      // Animation
+      transition: all 0.1s;          
+      // Flex
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;      
+    } 
+  }
+}
+
+
+.Small-cards-container {
+  // Css grid: rows of 2 columns with same width each
+  display: grid;
+  grid-template-columns: 1fr 1fr;  
+  column-gap: 40px; 
+  row-gap: 20px; 
+  @media screen and (max-width: $screen-width--desktop-small) {
+    // Change grid to have only 1 column per row.
+    grid-template-columns: 1fr;
+  }        
+}

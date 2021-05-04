@@ -2,33 +2,28 @@
 @import '/src/components/colors.scss';
 @import './variables.scss';
 
-// Big- and Medium-size cards
-$standard-card-horizontal-padding: 20px;
-$standard-card-vertical-padding: 10px;
-// Small-size cards
-$alternative-card-tags-width: 220px;
-$alternative-card-description-width: calc(
-  100% - 
-  #{$alternative-card-tags-width + $action-buttons-width}
-);
-
 
 .Links-container .Links-card {
   background-color: $color-black;
   border-radius: 30px;
+  position: relative;
   
   // Set card dimensions
   &.Links-card--big {
-    width: $link-big-card-width;
+    width: 100%;
+    max-width: $link-big-card-max-width;
+    min-width: $link-big-card-min-width;
     height: $link-big-card-height;
   }
   &.Links-card--medium {
-    width: $link-medium-card-width;
+    min-width: $link-medium-card-width;
+    max-width: $link-medium-card-width;
     height: $link-medium-card-height;
   }
   &.Links-card--small {
-    width: $link-small-card-width;
-    height: $link-small-card-height;
+    width: 100%;
+    min-width: $link-small-card-min-width;
+    height: $link-small-card-height;  
   }
 
   // CommonCardContent
