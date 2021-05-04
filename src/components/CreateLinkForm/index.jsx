@@ -71,15 +71,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function CreateLinkForm(props) {
+export default function CreateLinkForm({created_link_data}) {
   const classes = useStyles();
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
 
-  const [private_button_state, setPrivateButtonState] = useState(props.link_data ? props.link_data.private : null);
+  const [private_button_state, setPrivateButtonState] = useState(created_link_data ? created_link_data.private : null);
 
-  const [link_data, setLinkData] = useState(props.link_data ? props.link_data : null);
+  const [link_data, setLinkData] = useState(created_link_data ? created_link_data : null);
 
   const handleChangeTag = (event, newValue) => {
     const update = {
