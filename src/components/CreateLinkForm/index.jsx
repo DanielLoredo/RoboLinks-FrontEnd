@@ -74,8 +74,8 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateLinkForm(props) {
   const classes = useStyles();
 
-  const tag_color = ["transparent", blue_color]
-  const tag_text = [blue_color, deep_blue]
+  const tag_color = ["transparent", blue_color];
+  const tag_text = [blue_color, deep_blue];
 
   const [private_button_state, setPrivateButtonState] = useState(props.link_data ? props.link_data.private : null);
 
@@ -89,14 +89,14 @@ export default function CreateLinkForm(props) {
       tags: [],
       private: false
     }
-    Object.assign(update, link_data)
-    let tag_update = update.tags
+    Object.assign(update, link_data);
+    let tag_update = update.tags;
     if (tag_update.includes(link_tags[newValue])) {
       tag_update.splice(tag_update.indexOf(link_tags[newValue]), 1);
     }else{
-      tag_update.push(link_tags[newValue])
+      tag_update.push(link_tags[newValue]);
     }
-    update.tags = tag_update
+    update.tags = tag_update;
     setLinkData(update);
   };
 
@@ -105,20 +105,20 @@ export default function CreateLinkForm(props) {
   };
 
   const handleChangeTitle = (event) => {
-    let update = link_data
-    update.title = event.target.value
+    let update = link_data;
+    update.title = event.target.value;
     setLinkData(update);
   };
 
   const handleChangeURL = (event) => {
-    let update = link_data
-    update.URL = event.target.value
+    let update = link_data;
+    update.URL = event.target.value;
     setLinkData(update);
   };
 
   const handleChangeShortLink = (event) => {
-    let update = link_data
-    update.short_link = event.target.value
+    let update = link_data;
+    update.short_link = event.target.value;
     setLinkData(update);
   };
 
@@ -129,11 +129,11 @@ export default function CreateLinkForm(props) {
   const submitForms = () => {
     // Function that makes a POST to the project's database
     // TODO: add POST function request and send json to backend
-    let update = link_data
-    update.tags = link_data.tags
-    update.private = private_button_state
+    let update = link_data;
+    update.tags = link_data.tags;
+    update.private = private_button_state;
     let short_link_data = JSON.stringify(link_data, null, 4);
-    alert(short_link_data)
+    alert(short_link_data);
   };
 
   return (
