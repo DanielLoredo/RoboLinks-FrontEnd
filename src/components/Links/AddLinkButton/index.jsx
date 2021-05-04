@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from 'react'
 import { AddCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CreateLinkForm from '../../CreateLinkForm'
@@ -33,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
 export default function AddLinkButton(){
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
-  const [modalStyle] = React.useState(getModalStyle);
-  const [open, setOpen] = React.useState(false);
+  const [modalStyle] = useState(getModalStyle);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -60,7 +59,7 @@ export default function AddLinkButton(){
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
     >
-        <CreateLinkForm />
+        <CreateLinkForm link_data={link_data}/>
     </Modal>
   </>
   )

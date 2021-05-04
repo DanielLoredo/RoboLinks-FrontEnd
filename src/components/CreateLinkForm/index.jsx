@@ -1,23 +1,17 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
+import React, { useState } from 'react'
 import './index.scss';
 import Grid from '@material-ui/core/Grid';
-import {
-  withStyles,
-  makeStyles,
-} from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
 import WallpaperIcon from '@material-ui/icons/Wallpaper';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-
-const blue_color = "#97DFFC";
+import {PrivateSwitch, FormTextField, a11yProps} from './FormComponents'
+import {
+  makeStyles,
+} from '@material-ui/core/styles';
+import {blue_color, baby_blue, deep_blue} from './colors'
 
 const link_tags = [
   "Github",
@@ -42,81 +36,7 @@ const link_tags = [
   "Robocup",
 ]
 
-const CssTextField = withStyles({
-  root: {
-    color: '#79B3CC',
-    borderColor: '#79B3CC',
-    '& .MuiInput-underline': {
-      color: '#79B3CC',
-    },
-    '& .MuiInput-input:disabled': {
-      borderBottom: '2px solid #79B3CC',
-    },
-    '& .MuiInputLabel-root': {
-      color: "#79B3CC",
-    },
-    '& .MuiOutlinedInput-root': {
-      color: "white",
-      '& fieldset': {
-        borderColor: '#79B3CC',
-      },
-      '&:hover fieldset': {
-        borderColor: '#79B3CC',
-      },
-      '& .Mui-disabled': {
-        backgroundColor: 'black',
-      },
-    },
-  },
-})(TextField);
-
-const PrivateSwitch = withStyles({
-  height: "10vh",
-  switchBase: {
-    color: "#6b98a8",
-    '&$checked': {
-      color: blue_color,
-    },
-    '&$checked + $track': {
-      backgroundColor: '#E5E5E5',
-    },
-  },
-  checked: {},
-  track: {},
-})(Switch);
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-      styles={{backgroundColor: "white"}}
-    >
-    <Box p={3}>
-      <Typography>{children}</Typography>
-    </Box>
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
-
-const useStyles2 = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     display: 'flex',
@@ -130,7 +50,7 @@ const useStyles2 = makeStyles((theme) => ({
     '& .MuiTab-root': {
       minWidth: "100%",
       borderRadius: "30px",
-      border:  '2px solid #79B3CC',
+      border:  '2px solid '+ baby_blue,
       display: "block",
       marginLeft: "auto",
       marginRight: "auto",
@@ -146,16 +66,6 @@ const useStyles2 = makeStyles((theme) => ({
   tabs: {
     width: "100%",
   },
-}));
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // display: 'flex',
-    // flexWrap: 'wrap',
-    color: "#79B3CC",
-    borderColor: '#79B3CC',
-    width: "100%",
-  },
   input: {
     display: 'none',
   }
@@ -163,31 +73,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateLinkForm(props) {
   const classes = useStyles();
-  const classes2 = useStyles2();
 
   const tag_color = ["transparent", blue_color]
-  const tag_text = [blue_color, "#101935"]
+  const tag_text = [blue_color, deep_blue]
 
-  const [link_data, setLinkData] = React.useState(props.link_data ? props.link_data : null);
+  const [private_button_state, setPrivateButtonState] = useState(props.link_data ? props.link_data.private : null);
 
-  const getDefinedTags = () =>{
-    var tags = new Array(link_tags.length).fill(0)
-    if (link_data) {
-      for (var i = 0; i<link_data.tags.length; i++) {
-        tags[link_tags.indexOf(link_data.tags[i])] = 1
-      }
-    }
-    return tags
-  }
-
-  const [private_button_state, setPrivateButtonState] = React.useState(props.link_data ? props.link_data.private : null);
-
-  const [selected_tag, setSelectedTag] = React.useState(getDefinedTags());
+  const [link_data, setLinkData] = useState(props.link_data ? props.link_data : null);
 
   const handleChangeTag = (event, newValue) => {
-    var new_array = [...selected_tag]
-    new_array[newValue] = (new_array[newValue] === 0) ? 1 : 0;
-    setSelectedTag(new_array)
+    const update = {
+      title: "",
+      URL: "",
+      short_link: "ROS",
+      tags: [],
+      private: false
+    }
+    Object.assign(update, link_data)
+    let tag_update = update.tags
+    if (tag_update.includes(link_tags[newValue])) {
+      tag_update.splice(tag_update.indexOf(link_tags[newValue]), 1);
+    }else{
+      tag_update.push(link_tags[newValue])
+    }
+    update.tags = tag_update
+    setLinkData(update);
   };
 
   const handleChangePrivateSwitch = (event) => {
@@ -195,19 +105,19 @@ export default function CreateLinkForm(props) {
   };
 
   const handleChangeTitle = (event) => {
-    var update = link_data
+    let update = link_data
     update.title = event.target.value
     setLinkData(update);
   };
 
   const handleChangeURL = (event) => {
-    var update = link_data
+    let update = link_data
     update.URL = event.target.value
     setLinkData(update);
   };
 
   const handleChangeShortLink = (event) => {
-    var update = link_data
+    let update = link_data
     update.short_link = event.target.value
     setLinkData(update);
   };
@@ -216,26 +126,21 @@ export default function CreateLinkForm(props) {
     alert("Delete data")
   }
 
-  const submitForms = (event) => {
-    var tags = []
-    for (var i = 0; i<selected_tag.length; i++) {
-      if (selected_tag[i]){
-        tags.push(link_tags[i])
-      }
-    }
-    var update = link_data
-    update.tags = tags
+  const submitForms = () => {
+    // Function that makes a POST to the project's database
+    // TODO: add POST function request and send json to backend
+    let update = link_data
+    update.tags = link_data.tags
     update.private = private_button_state
-    var str = JSON.stringify(link_data, null, 4);
-    alert(str)
+    let short_link_data = JSON.stringify(link_data, null, 4);
+    alert(short_link_data)
   };
 
   return (
     <form className="LinkForm" noValidate autoComplete="off" >
         <Grid container justify="space-evenly" alignItems="center" spacing={2}>
           <Grid item xs={12}>
-            <CssTextField
-              className={classes.root}
+            <FormTextField
               label="Link Title"
               variant="outlined"
               id="link-title-input"
@@ -244,8 +149,7 @@ export default function CreateLinkForm(props) {
             />
           </Grid>
           <Grid item xs={12}>
-            <CssTextField
-              className={classes.root}
+            <FormTextField
               label="URL"
               variant="outlined"
               id="url-input"
@@ -255,8 +159,7 @@ export default function CreateLinkForm(props) {
             />
           </Grid>
           <Grid item xs={6} md={3}>
-            <CssTextField
-              className={classes.root}
+            <FormTextField
               label="Short URL"
               defaultValue="robolinks/"
               InputProps={{
@@ -267,8 +170,7 @@ export default function CreateLinkForm(props) {
             />
           </Grid>
           <Grid item xs={6} md={9}>
-            <CssTextField
-              className={classes.root}
+            <FormTextField
               variant= "outlined"
               id="shorturl-input"
               defaultValue={link_data ? link_data.short_link:null}
@@ -277,25 +179,32 @@ export default function CreateLinkForm(props) {
           </Grid>
           <Grid item xs={6} className='tags'>
               <p className='icon-tag'>Tags</p>
-              <div className={classes2.root}>
+              <div className={classes.root}>
                 <Tabs
                   orientation="vertical"
                   variant="scrollable"
                   value={false}
                   onChange={handleChangeTag}
                   aria-label="Vertical tabs example"
-                  className={classes2.tabs}
+                  className={classes.tabs}
                   scrollButtons="on"
                 >
                   { link_tags.map((tag, id) => (
-                    <Tab label={tag} {...a11yProps(id)} style={{backgroundColor: tag_color[selected_tag[id]], color: tag_text[selected_tag[id]], margin: "1vh 0 0 0"}}/>))}
+                    <Tab
+                    label={tag}
+                    {...a11yProps(id)}
+                    style={{backgroundColor: tag_color[link_data.tags.includes(tag)?1:0], color: tag_text[link_data.tags.includes(tag)?1:0], margin: "1vh 0 0 0"}}/>))}
                 </Tabs>
               </div>
           </Grid>
           <Grid container item spacing={0} xs={6}>
             <Grid item xs={6}>
               <p className='icon-tag'>Subir imagen</p>
-              <input accept="image/*" className={classes.input} id="icon-button-file" type="file"/>
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="icon-button-file"
+                type="file"/>
               <label htmlFor="icon-button-file">
                 <IconButton aria-label="upload-image" className="icon-btn" component="span">
                   <WallpaperIcon style={{ fontSize: 40 }}/>
