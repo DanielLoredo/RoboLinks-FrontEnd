@@ -1,0 +1,35 @@
+
+@import '../index.scss';
+
+
+.Links-card.Links-card--small {
+  padding: 15px 30px;
+  // Flex
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .Links-card-description {
+    width: $alternative-card-description-width;
+    height: 100%;
+    margin-right: 10px;
+    // Flex
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    .Links-card-name {
+      text-align: left;
+    }      
+  }
+  .Links-card-tags {
+    width: $alternative-card-tags-width;
+    // Center tags
+    justify-content: center;              
+    .Links-card-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+  }    
+}  

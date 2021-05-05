@@ -1,0 +1,17 @@
+
+
+// Animation to make the color of the element darker on hover.
+.darken-on-hover {
+  transition: filter 0.1s;
+  &:hover {
+    filter: brightness(85%);
+  }
+}
+
+// Keep text in one line (avoiding wrap), and truncate
+// when text does not fit inside the width of the element.
+.truncate-text--single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;    
+}

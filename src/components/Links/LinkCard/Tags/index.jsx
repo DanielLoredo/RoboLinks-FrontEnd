@@ -1,15 +1,15 @@
 
 import React from "react";
 
-import './TagsSection.scss';
+import './index.scss';
 
-const LinkCardTagsSection = ({ tags }) => (
-  <div className="Links-card-tags-section">
+const LinkCardTags = ({ tags }) => (
+  <div className="Links-card-tags">
     {tags?.map((tag, index) => (
       <div
         // Create unique key (in case 2 equal urls are given) 
         key={`${index}-${tag}`}         
-        className="Links-card-tag"
+        className="Links-card-tag truncate-text--single-line"
       >
         {tag}
       </div>
@@ -17,4 +17,4 @@ const LinkCardTagsSection = ({ tags }) => (
   </div>
 );
 
-export default LinkCardTagsSection;
+export default LinkCardTags;
