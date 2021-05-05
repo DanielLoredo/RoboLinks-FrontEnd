@@ -6,118 +6,118 @@ export const MOCKED_LINKS = [
     image: '/images/Octocat.png',
     url: 'rob.io/github',
     tags: ['GitHub', 'Robotics', 'Object-Oriented programming'],
-    size: 'BIG',
+    counter: 0
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'BIG',
+    counter: 1
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'BIG',
+    counter: 2
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'BIG',
+    counter: 3
   },
   {
     name: 'GitHub',
     image: '/images/Octocat.png',
     url: 'rob.io/github',
     tags: ['GitHub', 'Robotics', 'Object-Oriented programming'],
-    size: 'MEDIUM',
+    counter: 4
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'MEDIUM',
+    counter: 5
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'MEDIUM',
+    counter: 6
   },
   {
     name: 'GitHub',
     image: '/images/Octocat.png',
     url: 'rob.io/github',
     tags: ['GitHub', 'Robotics', 'Object-Oriented programming'],
-    size: 'MEDIUM',
+    counter: 7
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'MEDIUM',
+    counter: 8
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'SMALL',
+    counter: 9
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'SMALL',
+    counter: 10
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'SMALL',
+    counter: 11
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'SMALL',
+    counter: 12
   },
   {
     name: 'GitHub',
     image: '/images/Octocat.png',
     url: 'rob.io/github',
     tags: ['GitHub', 'Robotics', 'Object-Oriented programming'],
-    size: 'SMALL',
+    counter: 13
   },
   {
     name: 'Intro a ROS',
     image: '/images/ROS.png',
     url: 'rob.io/2XpfDeG',
     tags: ['GitHub', 'ROS', 'Youtube'],
-    size: 'SMALL',
+    counter: 14
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'SMALL',
+    counter: 15
   },
   {
     name: 'RoboCupido',
     image: '/images/RoboCupido.png',
     url: 'rob.io/robocupido',
     tags: ['GitHub', 'ML', 'RoBorregos'],
-    size: 'SMALL',
+    counter: 16
   },
 ];

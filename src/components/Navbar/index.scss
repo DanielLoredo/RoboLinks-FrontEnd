@@ -24,7 +24,7 @@
   .Navbar-logo {
     // By setting the width, the height is adjusted
     // automatically to avoid distortionating the image    
-    width: 300px;
+    width: 200px;
   }
 
   .Navbar-search-links {
@@ -33,16 +33,16 @@
     align-items: center;  
     padding: 15px;    
     padding-left: 35px;    
-    width: 600px;
-    height: 50px;
+    width: 420px;
+    height: 40px;
     border-radius: 30px;
     border: 3px $color-baby-blue solid;
     background-color: transparent;
 
     .Navbar-search-links-input {
       color: white;
-      font-size: 20px;
-      width: 100%; 
+      font-size: 18px;
+      width: 100%;
     }
     .Navbar-search-links-icon {
       color: $color-baby-blue;
