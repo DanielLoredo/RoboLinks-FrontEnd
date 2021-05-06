@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import './index.scss';
 
-const LinkCardActionButtons = ({ url, handleCopySnackbar }) => {
+const LinkCardActionButtons = ({ short_url, handleCopySnackbar }) => {
   // TODO: implement edit function
   const editUrl = () => {}
 
@@ -15,7 +15,7 @@ const LinkCardActionButtons = ({ url, handleCopySnackbar }) => {
       throw new Error('Your browser does not support copying to clipboard');
     }
     navigator.clipboard
-      .writeText(url)
+      .writeText(short_url)
       .then(() => handleCopySnackbar())
       .catch((error) => {
         throw new Error(`Could not copy to clipboard.\n\nReason: ${error}`);

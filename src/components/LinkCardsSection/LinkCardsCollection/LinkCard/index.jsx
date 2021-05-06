@@ -33,12 +33,12 @@ const CARD_COMPONENT_BY_SIZE_KEY = {
   "MEDIUM": MediumLinkCard,
   "SMALL": SmallLinkCard,
 }
-const LinkCard = ({ name, image, url, tags, size, handleCopySnackbar }) => {
+const LinkCard = ({ title, image, short_url, tags, size, handleCopySnackbar }) => {
   const LinkCardComponent = CARD_COMPONENT_BY_SIZE_KEY[size];
   return <LinkCardComponent 
-    name={name}
+    title={title}
     image={image}
-    url={url}
+    short_url={short_url}
     tags={tags}
     handleCopySnackbar={handleCopySnackbar}
   />

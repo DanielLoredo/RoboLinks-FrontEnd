@@ -1,13 +1,16 @@
 
-$link-big-card-width: 310px;
 $link-big-card-max-width: 450px;
 $link-big-card-min-width: 270px;
 $link-big-card-height: 190px;
 
-$link-medium-card-width: 210px;
+// NOTE: make sure to update the JS constant (AVERAGE_MEDIUM_SIZE_CARD_WIDTH)
+// if you change the scss variable ($link-medium-card-width)
+$link-medium-card-width: 240px;
 $link-medium-card-height: 190px;
 
 $link-small-card-min-width: 200px;
 $link-small-card-height: 80px;
+
+
 
 $action-buttons-width: 64px;
