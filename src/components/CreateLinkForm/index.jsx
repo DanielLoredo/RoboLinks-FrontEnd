@@ -7,11 +7,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import {PrivateSwitch, FormTextField, a11yProps} from './FormComponents'
+import { PrivateSwitch, FormTextField, a11yProps } from './FormComponents';
 import {
   makeStyles,
 } from '@material-ui/core/styles';
-import {blue_color, baby_blue, deep_blue} from './colors'
+import { blue_color, baby_blue, deep_blue } from '../colors';
 
 const link_tags = [
   "Github",

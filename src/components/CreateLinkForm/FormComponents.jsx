@@ -3,7 +3,12 @@ import Switch from '@material-ui/core/Switch';
 import {
   withStyles,
 } from '@material-ui/core/styles';
-import {blue_color, baby_blue, light_gray, tame_blue} from './colors'
+import {
+  blue_color,
+  baby_blue,
+  light_gray,
+  tame_blue,
+} from '../colors';
 
 
 export const PrivateSwitch = withStyles({
