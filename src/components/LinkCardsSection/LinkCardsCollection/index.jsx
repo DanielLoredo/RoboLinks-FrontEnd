@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton';
 import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 
@@ -7,12 +8,17 @@ import './index.scss';
 
 import LinkCard from './LinkCard';
 
-import { MOCKED_LINKS } from './MOCKED_LINKS';
+import { selectAllLinks } from "../../../store/links"
 
 
 const MAX_MEDIUM_CARDS = 8;
-const AVERAGE_BIG_SIZE_CARD_WIDTH = 310;
-const AVERAGE_MEDIUM_SIZE_CARD_WIDTH = 210 + 40;
+// NOTE: this value is just an average width of the BIG_SIZE_CARD,
+// since the actual width is dynamic (never the same).
+const AVERAGE_BIG_SIZE_CARD_WIDTH = 330;
+const MEDIUM_SIZE_CARD_HORIZONTAL_MARGIN = 40;
+// NOTE: make sure to update the scss variable ($link-medium-card-width)
+// if you change (AVERAGE_MEDIUM_SIZE_CARD_WIDTH)
+const AVERAGE_MEDIUM_SIZE_CARD_WIDTH = 240 + MEDIUM_SIZE_CARD_HORIZONTAL_MARGIN;
 
 const FIRST_ROW_KEY = 'FIRST_ROW';
 const SECOND_ROW_KEY = 'SECOND_ROW';
@@ -71,13 +77,13 @@ function distributeCardsPerRow(allLinksData, maxBigCardsAmount, maxMediumCardsAm
 // Render all the link-cards of the row. The type of card
 // (big, medium or small) is picked using by the (sizeKey) prop.
 const LinkCardsRow = ({ rowCards, sizeKey, handleCopySnackbar }) => (
-  rowCards.map(({ name, image, url, tags }, index) => (
+  rowCards.map(({ title, image, short_url, tags }, index) => (
     <LinkCard
       // Create unique key (in case 2 equal urls are given) 
-      key={`${index}-${url}`}
-      name={name}
+      key={`${index}-${short_url}`}
+      title={title}
       image={image}
-      url={url}
+      short_url={short_url}
       tags={tags}
       size={sizeKey}
       handleCopySnackbar={handleCopySnackbar}
@@ -85,11 +91,12 @@ const LinkCardsRow = ({ rowCards, sizeKey, handleCopySnackbar }) => (
   ))  
 );
 
-// TODO: replace MOCKED_LINKS with real links data
 const LinkCardsCollection = ({
   handleCopySnackbar,
   linksContainerWidth
 }) => {
+  const links = useSelector(selectAllLinks)
+
   const [distributedCards, setDistributedCards] = useState(EMPTY_CARDS_DISTRIBUTION);
   const [prevMaxBigCardsAmount, setPrevMaxBigCardsAmount] = useState(1);
   const [prevMaxMediumCardsAmount, setPrevMaxMediumCardsAmount] = useState(1);
@@ -97,16 +104,15 @@ const LinkCardsCollection = ({
   const [lastCarrouselCardIndex, setLastCarrouselCardIndex] = useState(null);
 
   // Redistribute the cards per row everytime either the max amount of big/medium 
-  // cards changed, or after the (links-data) array itself changed.
+  // cards changed, or after the (links) array itself changed.
   useEffect(() => {
-    const newCardsDistribution = distributeCardsPerRow(MOCKED_LINKS, prevMaxBigCardsAmount, prevMaxMediumCardsAmount);
+    const newCardsDistribution = distributeCardsPerRow(links, prevMaxBigCardsAmount, prevMaxMediumCardsAmount);
     setDistributedCards(newCardsDistribution);
     const { visibleCards } = newCardsDistribution[SECOND_ROW_KEY];
     setFirstCarrouselCardIndex(1);
     setLastCarrouselCardIndex(visibleCards);
-    // TODO: replace (MOCKED_LINKS) constant with real links-data variable
   }, 
-    [/* MOCKED_LINKS, */prevMaxBigCardsAmount, prevMaxMediumCardsAmount,
+    [links, prevMaxBigCardsAmount, prevMaxMediumCardsAmount,
     setDistributedCards, setFirstCarrouselCardIndex, setLastCarrouselCardIndex]
   );  
 
