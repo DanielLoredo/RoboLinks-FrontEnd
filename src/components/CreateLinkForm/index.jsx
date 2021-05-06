@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function CreateLinkForm({created_link_data}) {
+export default function CreateLinkForm({ created_link_data }) {
   const classes = useStyles();
 
   const tag_color = ["transparent", blue_color];
@@ -191,9 +191,12 @@ export default function CreateLinkForm({created_link_data}) {
                 >
                   { link_tags.map((tag, id) => (
                     <Tab
-                    label={tag}
-                    {...a11yProps(id)}
-                    style={{backgroundColor: tag_color[link_data.tags.includes(tag)?1:0], color: tag_text[link_data.tags.includes(tag)?1:0], margin: "1vh 0 0 0"}}/>))}
+                      key={id}
+                      label={tag}
+                      {...a11yProps(id)}
+                      style={{backgroundColor: tag_color[link_data.tags.includes(tag)?1:0], color: tag_text[link_data.tags.includes(tag)?1:0], margin: "1vh 0 0 0"}}
+                    />
+                  ))}
                 </Tabs>
               </div>
           </Grid>
