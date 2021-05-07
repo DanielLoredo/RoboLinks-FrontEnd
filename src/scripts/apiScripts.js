@@ -79,7 +79,7 @@ export const getAllUsers = async () => {
  * @param {String} title
  * @param {Number} priv Defines if a link is private - 0 | 1
  * @param {String} image
- * @param {Object} tags "@home" | "candidates" | "contests" | "covid" | "docs" | "drones" | "electronics" | "github" | "larcOpen" | "mechanics" | "presentation" | "programming" | "robocup" | "sideProjects" | "social" | "sponsors" | "vsss" | "youtube" | "workshop"
+ * @param {Array} tags "@home" | "candidates" | "contests" | "covid" | "docs" | "drones" | "electronics" | "github" | "larcOpen" | "mechanics" | "presentation" | "programming" | "robocup" | "sideProjects" | "social" | "sponsors" | "vsss" | "youtube" | "workshop"
  * @returns
  */
 export const createLink = async (url, short_url, title, priv, image, tags) => {
@@ -115,7 +115,7 @@ export const deleteLink = async (id) => {
  * In case you want to update the tags section of a link, you need to provide the key and the value 1. For example "docs": 1, inside the tags property.
  *
  * An example of how tags should be structured:
- * { "@home": 1, "mechanics": 0 }
+ * [ "@home", "mechanics" ]
  *
  * @param {String} id
  * @param {Object} params
@@ -124,7 +124,7 @@ export const deleteLink = async (id) => {
  * @param {String} params.title
  * @param {Number} params.private 0 | 1
  * @param {String} params.image
- * @param {Object} params.tags
+ * @param {Array} params.tags
  * @param {String} params.tags.tagName
  * @returns Promise
  */
@@ -142,7 +142,7 @@ export const updateLink = async (id, params) => {
  * @param {String} filters.url
  * @param {String} filters.short_url
  * @param {String} filters.title
- * @param {Array[]} tags
+ * @param {Array} tags
  * @returns
  */
 export const getAllLinks = async (filters, tags) => {
@@ -158,14 +158,11 @@ export const getAllLinks = async (filters, tags) => {
   }
 
   if (tags) {
-    queryString = queryString + "?tags=";
-    tags.forEach((tag, i) => {
-      if (i === tags.length - 1) {
-        tagParams = tagParams + tag;
-      } else {
-        tagParams = tagParams + tag + ",";
-      }
+    queryString = queryString + "tags=";
+    tags.forEach((tag) => {
+      tagParams = tagParams + `${tag},`;
     });
+    tagParams = tagParams.slice(0, tagParams.length - 1);
     queryString = queryString + tagParams;
   }
 
