@@ -1,5 +1,6 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch } from 'react-redux'
 import Snackbar from '@material-ui/core/Snackbar';
 
 import './index.scss';
@@ -9,14 +10,29 @@ import LinkCardsCollection from './LinkCardsCollection';
 import Alert from '../common/Alert';
 
 import { useDynamicWidthOfComponent } from '../utils';
+import { getAllLinks as getAllLinksAction } from "../../store/links";
+import { getAllLinks as getAllLinksApiRequest } from "../../scripts/apiScripts";
 
 
 const LinkCardsSection = () => {
+  const dispatch = useDispatch();
+
   const linksContainerRef = useRef(null);
   // NOTE: no need for debounceTime, to minize update time as much as possible
   const linksContainerWidth = useDynamicWidthOfComponent(linksContainerRef, 0);  
 
   const [isSnackbarOpened, setIsSnackbarOpened] = useState(false);
+
+  // Request all links data to API.
+  // If the request succeeds, the data is stored in the redux-store through an Action.
+  // Otherwise, an Error is thrown.
+  useEffect(() => {
+    getAllLinksApiRequest()
+      .then((response) => dispatch(getAllLinksAction({ links: response.data })))
+      .catch((error) => {
+        throw new Error(`Could not get all links.\n\nReason: ${error}`);
+      });
+  }, [dispatch]);
 
   const handleCopySnackbar = () => setIsSnackbarOpened(true);
   const handleClose = (event, reason) => {
