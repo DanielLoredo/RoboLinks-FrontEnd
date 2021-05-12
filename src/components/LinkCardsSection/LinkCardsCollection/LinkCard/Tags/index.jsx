@@ -5,8 +5,8 @@ import './index.scss';
 
 const LinkCardTags = ({ tags }) => (
   <div className="Links-card-tags">
-    {/* TODO: uncomment once tags come as an actual array of strins from backend */}
-    {/* {tags?.map((tag, index) => (
+    {/* TODO: implement carrousel to properly display more than 3 tags */}
+    {tags?.map((tag, index) => (
       <div
         // Create unique key (in case 2 equal tags are given) 
         key={`${index}-${tag}`}         
@@ -14,7 +14,7 @@ const LinkCardTags = ({ tags }) => (
       >
         {tag}
       </div>
-    ))} */}
+    ))}
   </div>
 );
 
