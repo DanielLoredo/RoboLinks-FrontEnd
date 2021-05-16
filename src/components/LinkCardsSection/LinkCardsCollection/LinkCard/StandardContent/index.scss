@@ -18,9 +18,7 @@ $standard-card-vertical-padding: 10px;
   align-items: center;
 
   .Links-card-title {
-    padding: 0 $standard-card-horizontal-padding;
-    padding-top: 10px;
-    padding-bottom: 5px;
+    padding: 5px $standard-card-horizontal-padding;
   }      
   .Links-image-section,
   .Links-image-section > .MuiCardMedia-root {
