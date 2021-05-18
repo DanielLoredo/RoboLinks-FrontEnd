@@ -13,6 +13,9 @@ import { getUserTypeByEmail } from "../../scripts/apiScripts";
 import { baby_blue } from "../colors";
 import "./index.scss";
 
+import { selectUser } from "../../store/auth/selectors";
+import { useSelector } from "react-redux";
+
 const StyledMenu = withStyles({
   paper: {
     backgroundColor: baby_blue,
@@ -50,6 +53,7 @@ function SignUser() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [signedIn, setSignedIn] = React.useState(false);
+  const user = useSelector(selectUser);
 
   const responseGoogle = (response) => {
     let userEmail = response.profileObj.email;
@@ -59,13 +63,14 @@ function SignUser() {
         setSignedIn(true);
       })
       .catch((error) => {
-        throw new Error(`Could not get all links.\n\nReason: ${error}`);
+        throw new Error(`Could not get the user type.\n\nReason: ${error}`);
       });
     setAnchorEl(null);
   };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    console.log(user);
   };
 
   const handleClose = () => {
