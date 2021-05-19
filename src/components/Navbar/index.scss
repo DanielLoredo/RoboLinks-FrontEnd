@@ -1,6 +1,5 @@
-
-@import '/src/components/colors.scss';
-@import './variables.scss';
+@import "/src/components/colors.scss";
+@import "./variables.scss";
 
 .Navbar {
   background-color: $color-black;
@@ -23,16 +22,16 @@
 
   .Navbar-logo {
     // By setting the width, the height is adjusted
-    // automatically to avoid distortionating the image    
+    // automatically to avoid distortionating the image
     width: 200px;
   }
 
   .Navbar-search-links {
     display: flex;
     justify-content: flex-start;
-    align-items: center;  
-    padding: 15px;    
-    padding-left: 35px;    
+    align-items: center;
+    padding: 15px;
+    padding-left: 35px;
     width: 420px;
     height: 40px;
     border-radius: 30px;
@@ -47,9 +46,9 @@
     .Navbar-search-links-icon {
       color: $color-baby-blue;
       width: 34px;
-      height: 34px;       
+      height: 34px;
     }
-  }  
+  }
 
   .Navbar-avatar {
     color: $color-baby-blue;
@@ -58,5 +57,9 @@
     // Avoid sizes to shrink when few space left
     min-height: 50px;
     min-width: 50px;
+
+    &-logged {
+      color: $color-platinum;
+    }
   }
 }
