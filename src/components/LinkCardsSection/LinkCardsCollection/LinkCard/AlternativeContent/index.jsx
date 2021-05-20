@@ -38,7 +38,7 @@ const AlternativeCardContent = ({
       <CardActionButtons
         short_url={reducedUrl}
         handleCopySnackbar={handleCopySnackbar}
-        editingUrl={setEditingUrl}
+        setEditingUrl={setEditingUrl}
       />
     </>
   );

@@ -15,27 +15,25 @@ import { postLink } from "../../scripts/imageScript";
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
 const link_tags = [
-  "Github",
-  "Presentation",
-  "Workshop",
-  "Social",
-  "YouTube",
-  "Sponsors",
-  "Electronics",
-  "Programming",
-  "Mechanics",
-  "Contests",
-  "SideProject",
-  "Docs",
-  "Candidates",
-  "Covid",
-  "Smart Factory",
-  "@Home",
-  "Vsss",
-  "Autonomous Drones",
-  "LarcOpen",
-  "Robocup",
-  "Drones",
+  "github",
+  "presentation",
+  "workshop",
+  "social",
+  "youtube",
+  "sponsors",
+  "electronics",
+  "programming",
+  "mechanics",
+  "contests",
+  "sideProjects",
+  "docs",
+  "candidates",
+  "covid",
+  "@home",
+  "vsss",
+  "larcOpen",
+  "robocup",
+  "drones",
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -96,8 +94,10 @@ export default function CreateLinkForm({
   created_link_data,
   open,
   handleClose,
+  linkUpdate,
 }) {
   const classes = useStyles();
+  console.log(created_link_data);
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
@@ -115,6 +115,7 @@ export default function CreateLinkForm({
   const [image_selected, setImageSelected] = useState(null);
 
   const handleChangeTag = (event, newValue) => {
+    //let tags = link_data.tags ? link_data.tags:[];
     const update = {
       title: "",
       URL: "",
@@ -123,7 +124,8 @@ export default function CreateLinkForm({
       private: false,
     };
     Object.assign(update, link_data);
-    let tag_update = update.tags;
+    let tag_update = [...update.tags];
+
     if (tag_update.includes(link_tags[newValue])) {
       tag_update.splice(tag_update.indexOf(link_tags[newValue]), 1);
     } else {
@@ -167,7 +169,7 @@ export default function CreateLinkForm({
     update.private = private_button_state;
 
     // Cloudinary image upload
-    postLink(image_selected, update);
+    postLink(image_selected, update, linkUpdate);
   };
 
   return (
@@ -203,7 +205,7 @@ export default function CreateLinkForm({
           <Grid item xs={6} md={3}>
             <FormTextField
               label="Short URL"
-              defaultValue="robolinks/"
+              defaultValue="rbgs.xyz/"
               InputProps={{
                 readOnly: true,
               }}

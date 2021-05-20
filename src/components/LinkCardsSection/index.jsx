@@ -48,7 +48,6 @@ const LinkCardsSection = () => {
     setEditingUrl({ editing: false, url: {} });
   };
 
-  console.log(editingUrl);
   return (
     <div className="Links-section">
       <div className="Links-container" ref={linksContainerRef}>
@@ -64,6 +63,7 @@ const LinkCardsSection = () => {
           open={editingUrl.editing}
           handleClose={handleCloseModal}
           created_link_data={editingUrl.url}
+          linkUpdate={true}
         />
       ) : null}
       <Snackbar
