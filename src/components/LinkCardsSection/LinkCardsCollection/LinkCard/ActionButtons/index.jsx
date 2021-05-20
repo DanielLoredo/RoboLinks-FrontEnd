@@ -19,15 +19,16 @@ const LinkCardActionButtons = ({
 
   const editUrl = () => {
     let link = links.filter((el) => el.short_url.substring(7) === short_url);
-    console.log(link);
+    let priv = link[0].private === 0 ? false : true;
     setEditingUrl({
       editing: true,
       url: {
+        id: link[0].id,
         title: link[0].title,
         URL: link[0].url,
         short_link: link[0].short_url.substring(16),
         tags: link[0].tags,
-        private: link[0].private,
+        private: priv,
       },
     });
   };
