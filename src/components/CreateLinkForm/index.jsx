@@ -11,6 +11,7 @@ import { PrivateSwitch, FormTextField, a11yProps } from "./FormComponents";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
+import { deleteLink } from "../../scripts/apiScripts";
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
@@ -156,7 +157,7 @@ export default function CreateLinkForm({
   };
 
   const deleteForm = () => {
-    alert("Delete data");
+    deleteLink(created_link_data.id);
   };
 
   const submitForms = () => {
