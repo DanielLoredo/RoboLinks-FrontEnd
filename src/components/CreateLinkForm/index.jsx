@@ -9,31 +9,33 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { PrivateSwitch, FormTextField, a11yProps } from "./FormComponents";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 
+import Modal from "@material-ui/core/Modal";
 import { blue_color, baby_blue, deep_blue } from "../colors";
+import { postLink } from "../../scripts/imageScript";
 
 const link_tags = [
   "Github",
   "Presentation",
-  "Classes/ Workshops",
+  "Workshop",
   "Social",
   "YouTube",
   "Sponsors",
   "Electronics",
   "Programming",
   "Mechanics",
-  "Competition",
-  "Side-project",
+  "Contests",
+  "SideProject",
   "Docs",
   "Candidates",
-  "Covid response",
+  "Covid",
   "Smart Factory",
-  "@HOME",
-  "VSSS",
+  "@Home",
+  "Vsss",
   "Autonomous Drones",
-  "LARC Open",
+  "LarcOpen",
   "Robocup",
+  "Drones",
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -103,11 +105,11 @@ export default function CreateLinkForm({
   const [private_button_state, setPrivateButtonState] = useState(
     created_link_data ? created_link_data.private : null
   );
-
   const [link_data, setLinkData] = useState(
     created_link_data ? created_link_data : null
   );
   const [modalStyle] = useState(getModalStyle);
+  const [image_selected, setImageSelected] = useState(null);
 
   const handleChangeTag = (event, newValue) => {
     const update = {
@@ -160,8 +162,9 @@ export default function CreateLinkForm({
     let update = link_data;
     update.tags = link_data.tags;
     update.private = private_button_state;
-    let short_link_data = JSON.stringify(link_data, null, 4);
-    alert(short_link_data);
+
+    // Cloudinary image upload
+    postLink(image_selected, update);
   };
 
   return (
@@ -201,10 +204,18 @@ export default function CreateLinkForm({
               InputProps={{
                 readOnly: true,
               }}
-              disabled
-              id="shorturl-readonly"
             />
+            <label htmlFor="icon-button-file">
+              <IconButton
+                aria-label="upload-image"
+                className="icon-btn"
+                component="span"
+              >
+                <WallpaperIcon style={{ fontSize: 40 }} />
+              </IconButton>
+            </label>
           </Grid>
+
           <Grid item xs={6} md={9}>
             <FormTextField
               variant="outlined"
@@ -245,10 +256,12 @@ export default function CreateLinkForm({
             <Grid item xs={6}>
               <p className="icon-tag">Subir imagen</p>
               <input
-                accept="image/*"
-                className={classes.input}
-                id="icon-button-file"
-                type="file"
+              accept="image/*"
+              className={classes.input}
+              id="icon-button-file"
+              type="file"
+              onChange={(e) => {
+                setImageSelected(e.target.files[0]);
               />
               <label htmlFor="icon-button-file">
                 <IconButton
