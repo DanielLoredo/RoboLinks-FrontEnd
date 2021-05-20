@@ -107,6 +107,7 @@ export default function CreateLinkForm({
   const [link_data, setLinkData] = useState(
     created_link_data ? created_link_data : null
   );
+  // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
 
   const handleChangeTag = (event, newValue) => {
