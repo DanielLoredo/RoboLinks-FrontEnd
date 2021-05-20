@@ -90,7 +90,6 @@ export const createLink = async (url, short_url, title, priv, image, tags) => {
     short_url: short_url,
     title: title,
     private: priv,
-    contador: 0,
     image: image,
     tags: tags,
   };
@@ -136,7 +135,7 @@ export const updateLink = async (id, params) => {
 
 /**
  * Returns all links with optional parameters
- * 
+ *
  * Filters and tags are optional
  * @param {Object} filters
  * @param {String} filters.url

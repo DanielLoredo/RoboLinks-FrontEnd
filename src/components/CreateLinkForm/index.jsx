@@ -10,30 +10,32 @@ import Tab from "@material-ui/core/Tab";
 import { PrivateSwitch, FormTextField, a11yProps } from "./FormComponents";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import { postLink } from "../../scripts/imageScript";
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
 const link_tags = [
   "Github",
   "Presentation",
-  "Classes/ Workshops",
+  "Workshop",
   "Social",
   "YouTube",
   "Sponsors",
   "Electronics",
   "Programming",
   "Mechanics",
-  "Competition",
-  "Side-project",
+  "Contests",
+  "SideProject",
   "Docs",
   "Candidates",
-  "Covid response",
+  "Covid",
   "Smart Factory",
-  "@HOME",
-  "VSSS",
+  "@Home",
+  "Vsss",
   "Autonomous Drones",
-  "LARC Open",
+  "LarcOpen",
   "Robocup",
+  "Drones",
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +112,8 @@ export default function CreateLinkForm({
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
 
+  const [image_selected, setImageSelected] = useState(null);
+
   const handleChangeTag = (event, newValue) => {
     const update = {
       title: "",
@@ -161,8 +165,9 @@ export default function CreateLinkForm({
     let update = link_data;
     update.tags = link_data.tags;
     update.private = private_button_state;
-    let short_link_data = JSON.stringify(link_data, null, 4);
-    alert(short_link_data);
+
+    // Cloudinary image upload
+    postLink(image_selected, update);
   };
 
   return (
@@ -191,7 +196,7 @@ export default function CreateLinkForm({
               variant="outlined"
               id="url-input"
               defaultValue={link_data ? link_data.URL : ""}
-              disabled={link_data ? true : false}
+              disabled={/*link_data ? true :*/ false}
               onChange={handleChangeURL}
             />
           </Grid>
@@ -250,6 +255,9 @@ export default function CreateLinkForm({
                 className={classes.input}
                 id="icon-button-file"
                 type="file"
+                onChange={(e) => {
+                  setImageSelected(e.target.files[0]);
+                }}
               />
               <label htmlFor="icon-button-file">
                 <IconButton
