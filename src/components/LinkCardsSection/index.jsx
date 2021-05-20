@@ -1,27 +1,29 @@
-
 import React, { useState, useRef, useEffect } from "react";
-import { useDispatch } from 'react-redux'
-import Snackbar from '@material-ui/core/Snackbar';
+import { useDispatch } from "react-redux";
+import Snackbar from "@material-ui/core/Snackbar";
 
-import './index.scss';
+import "./index.scss";
 
-import AddLinkCardButton from './AddLinkCardButton';
-import LinkCardsCollection from './LinkCardsCollection';
-import Alert from '../common/Alert';
+import AddLinkCardButton from "./AddLinkCardButton";
+import LinkCardsCollection from "./LinkCardsCollection";
+import Alert from "../common/Alert";
 
-import { useDynamicWidthOfComponent } from '../utils';
+import { useDynamicWidthOfComponent } from "../utils";
 import { getAllLinks as getAllLinksAction } from "../../store/links";
 import { getAllLinks as getAllLinksApiRequest } from "../../scripts/apiScripts";
 
+import CreateLinkForm from "../CreateLinkForm";
 
 const LinkCardsSection = () => {
   const dispatch = useDispatch();
 
   const linksContainerRef = useRef(null);
   // NOTE: no need for debounceTime, to minize update time as much as possible
-  const linksContainerWidth = useDynamicWidthOfComponent(linksContainerRef, 0);  
+  const linksContainerWidth = useDynamicWidthOfComponent(linksContainerRef, 0);
 
   const [isSnackbarOpened, setIsSnackbarOpened] = useState(false);
+
+  const [editingUrl, setEditingUrl] = useState({ editing: false, url: {} });
 
   // Request all links data to API.
   // If the request succeeds, the data is stored in the redux-store through an Action.
@@ -36,23 +38,38 @@ const LinkCardsSection = () => {
 
   const handleCopySnackbar = () => setIsSnackbarOpened(true);
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') { return; }
+    if (reason === "clickaway") {
+      return;
+    }
     setIsSnackbarOpened(false);
   };
 
+  const handleCloseModal = () => {
+    setEditingUrl({ editing: false, url: {} });
+  };
+
+  console.log(editingUrl);
   return (
     <div className="Links-section">
       <div className="Links-container" ref={linksContainerRef}>
-        <LinkCardsCollection 
+        <LinkCardsCollection
           handleCopySnackbar={handleCopySnackbar}
           linksContainerWidth={linksContainerWidth}
+          setEditingUrl={setEditingUrl}
         />
       </div>
       <AddLinkCardButton />
+      {editingUrl.editing ? (
+        <CreateLinkForm
+          open={editingUrl.editing}
+          handleClose={handleCloseModal}
+          created_link_data={editingUrl.url}
+        />
+      ) : null}
       <Snackbar
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         open={isSnackbarOpened}
         autoHideDuration={3000}

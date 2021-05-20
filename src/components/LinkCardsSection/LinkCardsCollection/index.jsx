@@ -1,15 +1,13 @@
-
 import React, { useState, useEffect } from "react";
-import { useSelector } from 'react-redux'
-import IconButton from '@material-ui/core/IconButton';
-import { NavigateBefore, NavigateNext } from '@material-ui/icons';
+import { useSelector } from "react-redux";
+import IconButton from "@material-ui/core/IconButton";
+import { NavigateBefore, NavigateNext } from "@material-ui/icons";
 
-import './index.scss';
+import "./index.scss";
 
-import LinkCard from './LinkCard';
+import LinkCard from "./LinkCard";
 
-import { selectAllLinks } from "../../../store/links"
-
+import { selectAllLinks } from "../../../store/links";
 
 const MAX_MEDIUM_CARDS = 8;
 // NOTE: this value is just an average width of the BIG_SIZE_CARD,
@@ -20,54 +18,61 @@ const MEDIUM_SIZE_CARD_HORIZONTAL_MARGIN = 40;
 // if you change (AVERAGE_MEDIUM_SIZE_CARD_WIDTH)
 const AVERAGE_MEDIUM_SIZE_CARD_WIDTH = 240 + MEDIUM_SIZE_CARD_HORIZONTAL_MARGIN;
 
-const FIRST_ROW_KEY = 'FIRST_ROW';
-const SECOND_ROW_KEY = 'SECOND_ROW';
-const THIRD_ROW_KEY = 'THIRD_ROW';
+const FIRST_ROW_KEY = "FIRST_ROW";
+const SECOND_ROW_KEY = "SECOND_ROW";
+const THIRD_ROW_KEY = "THIRD_ROW";
 
 const EMPTY_CARDS_DISTRIBUTION = {
   [FIRST_ROW_KEY]: {
     rowCards: [],
-    sizeKey: 'BIG',
-    containerClass: 'Big-cards-container',
+    sizeKey: "BIG",
+    containerClass: "Big-cards-container",
   },
-  [SECOND_ROW_KEY]:{
+  [SECOND_ROW_KEY]: {
     rowCards: [],
-    sizeKey: 'MEDIUM',
-    containerClass: 'Medium-cards-container',
+    sizeKey: "MEDIUM",
+    containerClass: "Medium-cards-container",
     visibleCards: 0,
   },
-  [THIRD_ROW_KEY]:{
+  [THIRD_ROW_KEY]: {
     rowCards: [],
-    sizeKey: 'SMALL',
-    containerClass: 'Small-cards-container',
+    sizeKey: "SMALL",
+    containerClass: "Small-cards-container",
   },
 };
 
 // Distribute/Split all cards between the 3 rows of the section.
 // NOTE: It is assumed that the (allLinksData) array is given already
-// sorted by the counter field (from biggest to smallest, being the 
+// sorted by the counter field (from biggest to smallest, being the
 // first element of the array the one with the biggest counter value).
-function distributeCardsPerRow(allLinksData, maxBigCardsAmount, maxMediumCardsAmount) {
+function distributeCardsPerRow(
+  allLinksData,
+  maxBigCardsAmount,
+  maxMediumCardsAmount
+) {
   // Clone all links-data to safely manipulate it's data.
   let remainingCards = [...allLinksData];
   // Pre-fill (and structurate) output dictionary with empty dictionary.
-  let newCardsDistribution = {...EMPTY_CARDS_DISTRIBUTION};
-// 1stRow: (rowCards) array are the first (maxBigCardsAmount) elements of the array
-  // NOTE: the (splice) operation not only returns the selected elements 
+  let newCardsDistribution = { ...EMPTY_CARDS_DISTRIBUTION };
+  // 1stRow: (rowCards) array are the first (maxBigCardsAmount) elements of the array
+  // NOTE: the (splice) operation not only returns the selected elements
   // of the array, but is also removes those elements from the array.
-  newCardsDistribution[FIRST_ROW_KEY].rowCards = remainingCards.splice(0, maxBigCardsAmount);
-// 2ndRow (carrousel): cards array are the next (MAX_MEDIUM_CARDS) 
-  // elements of the array. 
+  newCardsDistribution[FIRST_ROW_KEY].rowCards = remainingCards.splice(
+    0,
+    maxBigCardsAmount
+  );
+  // 2ndRow (carrousel): cards array are the next (MAX_MEDIUM_CARDS)
+  // elements of the array.
   // Additionally, the (visibleCards) field is set to keep track of
   // how many (rowCards) will be visible inside the cards-carrousel.
   const newCards2ndRow = newCardsDistribution[SECOND_ROW_KEY];
   newCards2ndRow.rowCards = remainingCards.splice(0, MAX_MEDIUM_CARDS);
-  if(newCards2ndRow.rowCards.length < maxMediumCardsAmount) {
+  if (newCards2ndRow.rowCards.length < maxMediumCardsAmount) {
     newCards2ndRow.visibleCards = newCards2ndRow.rowCards.length;
   } else {
     newCards2ndRow.visibleCards = maxMediumCardsAmount;
   }
-// 3rdRow: (rowCards) array are all the remaning elements 
+  // 3rdRow: (rowCards) array are all the remaning elements
   // (after deleting the elements of the 1st and 2nd row).
   newCardsDistribution[THIRD_ROW_KEY].rowCards = remainingCards;
 
@@ -76,10 +81,15 @@ function distributeCardsPerRow(allLinksData, maxBigCardsAmount, maxMediumCardsAm
 
 // Render all the link-cards of the row. The type of card
 // (big, medium or small) is picked using by the (sizeKey) prop.
-const LinkCardsRow = ({ rowCards, sizeKey, handleCopySnackbar }) => (
+const LinkCardsRow = ({
+  rowCards,
+  sizeKey,
+  handleCopySnackbar,
+  setEditingUrl,
+}) =>
   rowCards.map(({ title, image, short_url, tags }, index) => (
     <LinkCard
-      // Create unique key (in case 2 equal urls are given) 
+      // Create unique key (in case 2 equal urls are given)
       key={`${index}-${short_url}`}
       title={title}
       image={image}
@@ -87,105 +97,135 @@ const LinkCardsRow = ({ rowCards, sizeKey, handleCopySnackbar }) => (
       tags={tags}
       size={sizeKey}
       handleCopySnackbar={handleCopySnackbar}
+      setEditingUrl={setEditingUrl}
     />
-  ))  
-);
+  ));
 
 const LinkCardsCollection = ({
   handleCopySnackbar,
-  linksContainerWidth
+  linksContainerWidth,
+  setEditingUrl,
 }) => {
-  const links = useSelector(selectAllLinks)
+  const links = useSelector(selectAllLinks);
 
-  const [distributedCards, setDistributedCards] = useState(EMPTY_CARDS_DISTRIBUTION);
+  const [distributedCards, setDistributedCards] = useState(
+    EMPTY_CARDS_DISTRIBUTION
+  );
   const [prevMaxBigCardsAmount, setPrevMaxBigCardsAmount] = useState(1);
   const [prevMaxMediumCardsAmount, setPrevMaxMediumCardsAmount] = useState(1);
   const [firstCarrouselCardIndex, setFirstCarrouselCardIndex] = useState(null);
   const [lastCarrouselCardIndex, setLastCarrouselCardIndex] = useState(null);
 
-  // Redistribute the cards per row everytime either the max amount of big/medium 
+  // Redistribute the cards per row everytime either the max amount of big/medium
   // cards changed, or after the (links) array itself changed.
   useEffect(() => {
-    const newCardsDistribution = distributeCardsPerRow(links, prevMaxBigCardsAmount, prevMaxMediumCardsAmount);
+    const newCardsDistribution = distributeCardsPerRow(
+      links,
+      prevMaxBigCardsAmount,
+      prevMaxMediumCardsAmount
+    );
     setDistributedCards(newCardsDistribution);
     const { visibleCards } = newCardsDistribution[SECOND_ROW_KEY];
     setFirstCarrouselCardIndex(1);
     setLastCarrouselCardIndex(visibleCards);
-  }, 
-    [links, prevMaxBigCardsAmount, prevMaxMediumCardsAmount,
-    setDistributedCards, setFirstCarrouselCardIndex, setLastCarrouselCardIndex]
-  );  
+  }, [
+    links,
+    prevMaxBigCardsAmount,
+    prevMaxMediumCardsAmount,
+    setDistributedCards,
+    setFirstCarrouselCardIndex,
+    setLastCarrouselCardIndex,
+  ]);
 
-  // Everytime the value of (linksContainerWidth) changes, update the 
+  // Everytime the value of (linksContainerWidth) changes, update the
   // max amount of big/medium cards that fit inside the container.
   useEffect(() => {
     // Calculate the max amount of big- and medium-cards that fit in the container
     // The minimum amount of cards to fit is 1.
-    const newMaxBigCardsAmount = Math.floor(linksContainerWidth / AVERAGE_BIG_SIZE_CARD_WIDTH) || 1;
-    const newMaxMediumCardsAmount = Math.floor(linksContainerWidth / AVERAGE_MEDIUM_SIZE_CARD_WIDTH) || 1;
+    const newMaxBigCardsAmount =
+      Math.floor(linksContainerWidth / AVERAGE_BIG_SIZE_CARD_WIDTH) || 1;
+    const newMaxMediumCardsAmount =
+      Math.floor(linksContainerWidth / AVERAGE_MEDIUM_SIZE_CARD_WIDTH) || 1;
     // Check if max amount values changed
-    const maxBigCardsAmountChanged = newMaxBigCardsAmount && (prevMaxBigCardsAmount !== newMaxBigCardsAmount);
-    const maxMediumCardsAmountChanged = newMaxMediumCardsAmount && (prevMaxMediumCardsAmount !== newMaxMediumCardsAmount);
+    const maxBigCardsAmountChanged =
+      newMaxBigCardsAmount && prevMaxBigCardsAmount !== newMaxBigCardsAmount;
+    const maxMediumCardsAmountChanged =
+      newMaxMediumCardsAmount &&
+      prevMaxMediumCardsAmount !== newMaxMediumCardsAmount;
     // Update the values (only if either of them changed)
     maxBigCardsAmountChanged && setPrevMaxBigCardsAmount(newMaxBigCardsAmount);
-    maxMediumCardsAmountChanged && setPrevMaxMediumCardsAmount(newMaxMediumCardsAmount);
-  }, 
-    [linksContainerWidth, prevMaxBigCardsAmount, prevMaxMediumCardsAmount, 
-    setPrevMaxBigCardsAmount, setPrevMaxMediumCardsAmount]
-  );
+    maxMediumCardsAmountChanged &&
+      setPrevMaxMediumCardsAmount(newMaxMediumCardsAmount);
+  }, [
+    linksContainerWidth,
+    prevMaxBigCardsAmount,
+    prevMaxMediumCardsAmount,
+    setPrevMaxBigCardsAmount,
+    setPrevMaxMediumCardsAmount,
+  ]);
 
   // Update the index of the first and last carrousel-cards
   // after pressing the left or right carrousel navigation button.
   const moveCarrouselLeft = () => {
-    setFirstCarrouselCardIndex(firstCarrouselCardIndex-1);
-    setLastCarrouselCardIndex(lastCarrouselCardIndex-1);
-  }
+    setFirstCarrouselCardIndex(firstCarrouselCardIndex - 1);
+    setLastCarrouselCardIndex(lastCarrouselCardIndex - 1);
+  };
   const moveCarrouselRight = () => {
-    setFirstCarrouselCardIndex(firstCarrouselCardIndex+1);
-    setLastCarrouselCardIndex(lastCarrouselCardIndex+1);
-  }
+    setFirstCarrouselCardIndex(firstCarrouselCardIndex + 1);
+    setLastCarrouselCardIndex(lastCarrouselCardIndex + 1);
+  };
 
   const renderLinkCardsRowByKey = (rowKey) => {
-    const { rowCards, sizeKey, containerClass, visibleCards } = distributedCards[rowKey];
+    const { rowCards, sizeKey, containerClass, visibleCards } =
+      distributedCards[rowKey];
 
     if (rowKey === SECOND_ROW_KEY) {
       // Conditions to show carrousel navigation-buttons
-      const shouldShowLeftCarrouselButton = !!firstCarrouselCardIndex && firstCarrouselCardIndex!==1;
-      const shouldShowRightCarrouselButton = !!lastCarrouselCardIndex && lastCarrouselCardIndex!==rowCards.length;
+      const shouldShowLeftCarrouselButton =
+        !!firstCarrouselCardIndex && firstCarrouselCardIndex !== 1;
+      const shouldShowRightCarrouselButton =
+        !!lastCarrouselCardIndex && lastCarrouselCardIndex !== rowCards.length;
       // Set values of dynamic in-line carrousel style-properties
-      const carrouselDynamicWidth = AVERAGE_MEDIUM_SIZE_CARD_WIDTH * (visibleCards||0);
-        // (HorizontalOffset) causes the navigation-like effect when clicking
-        // the right and left carrousel buttons.
-      const carrouselDynamicHorizontalOffset = AVERAGE_MEDIUM_SIZE_CARD_WIDTH * (firstCarrouselCardIndex-1);
+      const carrouselDynamicWidth =
+        AVERAGE_MEDIUM_SIZE_CARD_WIDTH * (visibleCards || 0);
+      // (HorizontalOffset) causes the navigation-like effect when clicking
+      // the right and left carrousel buttons.
+      const carrouselDynamicHorizontalOffset =
+        AVERAGE_MEDIUM_SIZE_CARD_WIDTH * (firstCarrouselCardIndex - 1);
       return (
         <div className={containerClass}>
-          {shouldShowLeftCarrouselButton && <IconButton 
-            className="Navigate-left-button"
-            onClick={moveCarrouselLeft}
-          >
-            <NavigateBefore className="Navigate-left-icon darken-on-hover"/>
-          </IconButton>}   
+          {shouldShowLeftCarrouselButton && (
+            <IconButton
+              className="Navigate-left-button"
+              onClick={moveCarrouselLeft}
+            >
+              <NavigateBefore className="Navigate-left-icon darken-on-hover" />
+            </IconButton>
+          )}
           <div className="Cards-carrousel-container">
-            <div 
+            <div
               className="Cards-carrousel"
-              style={{ 
+              style={{
                 width: carrouselDynamicWidth,
-                transform: `translateX(-${carrouselDynamicHorizontalOffset}px)`
+                transform: `translateX(-${carrouselDynamicHorizontalOffset}px)`,
               }}
             >
               <LinkCardsRow
                 rowCards={rowCards}
                 sizeKey={sizeKey}
                 handleCopySnackbar={handleCopySnackbar}
+                setEditingUrl={setEditingUrl}
               />
-            </div>          
+            </div>
           </div>
-          {shouldShowRightCarrouselButton && <IconButton 
-            className="Navigate-right-button"
-            onClick={moveCarrouselRight}
-          >
-            <NavigateNext className="Navigate-right-icon darken-on-hover"/>
-          </IconButton>}          
+          {shouldShowRightCarrouselButton && (
+            <IconButton
+              className="Navigate-right-button"
+              onClick={moveCarrouselRight}
+            >
+              <NavigateNext className="Navigate-right-icon darken-on-hover" />
+            </IconButton>
+          )}
         </div>
       );
     }
@@ -196,11 +236,12 @@ const LinkCardsCollection = ({
           rowCards={rowCards}
           sizeKey={sizeKey}
           handleCopySnackbar={handleCopySnackbar}
+          setEditingUrl={setEditingUrl}
         />
-      </div>      
-    )
-  }
-  
+      </div>
+    );
+  };
+
   return (
     <>
       {renderLinkCardsRowByKey(FIRST_ROW_KEY)}
@@ -208,6 +249,6 @@ const LinkCardsCollection = ({
       {renderLinkCardsRowByKey(THIRD_ROW_KEY)}
     </>
   );
-}
+};
 
 export default LinkCardsCollection;
