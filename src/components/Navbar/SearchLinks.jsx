@@ -45,7 +45,7 @@ const SearchLinks = () => {
         dispatch(reduxAction(payload));
       })
       .catch((error) => {
-        dispatch(setIsLoadingLinks({ isLoading: false }));
+        dispatch(getLinksByFilter({ links: [] }));
         throw new Error(`Could not get all links.\n\nReason: ${error}`);
       });    
   }
