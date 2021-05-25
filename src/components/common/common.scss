@@ -10,6 +10,8 @@
 
 // Keep text in one line (avoiding wrap), and truncate
 // when text does not fit inside the width of the element.
+// NOTE: as a requirement, the component should have a (width)
+// attribute defined in order for this style to properly work.
 .truncate-text--single-line {
   white-space: nowrap;
   overflow: hidden;
