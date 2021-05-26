@@ -3,12 +3,24 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const linksSlice = createSlice({
   name: 'links',
-  initialState: [],
+  initialState: {
+    links: [],
+    isLoading: false,
+    isFiltering: false,
+  },
   reducers: {
     getAllLinks: (state, { type, payload }) => {
-      // Returns a new array of links to replace the existing array state.
-      // NOTE: (state = payload.links) does not actually mutate or return anything new.
-      return payload.links
+      state.isLoading = false;
+      state.isFiltering = false;
+      state.links = payload.links;
+    },
+    getLinksByFilter: (state, { type, payload }) => {
+      state.isLoading = false;
+      state.isFiltering = true;
+      state.links = payload.links;
+    },
+    setIsLoadingLinks: (state, { type, payload }) => {
+      state.isLoading = payload.isLoading;
     },
   },
 })
@@ -16,6 +28,8 @@ const linksSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   getAllLinks,
+  getLinksByFilter,
+  setIsLoadingLinks,
 } = linksSlice.actions
 
 export const linksReducer = linksSlice.reducer
