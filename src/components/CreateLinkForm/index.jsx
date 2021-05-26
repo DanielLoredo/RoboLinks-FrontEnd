@@ -159,7 +159,7 @@ export default function CreateLinkForm({
   };
 
   const deleteForm = () => {
-    deleteLink(created_link_data.id);
+    deleteLink(created_link_data.id).then(window.location.reload());
   };
 
   const submitForms = () => {
