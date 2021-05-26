@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 
@@ -95,7 +95,7 @@ const LinkCardsCollection = ({
   handleCopySnackbar,
   linksContainerWidth
 }) => {
-  const links = useSelector(selectAllLinks)
+  const links = useSelector(selectAllLinks);
 
   const [distributedCards, setDistributedCards] = useState(EMPTY_CARDS_DISTRIBUTION);
   const [prevMaxBigCardsAmount, setPrevMaxBigCardsAmount] = useState(1);

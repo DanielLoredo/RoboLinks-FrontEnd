@@ -5,7 +5,7 @@ const authSlice = createSlice({
   initialState: { user: {} },
   reducers: {
     getUserType: (state, { type, payload }) => {
-      return { ...state, user: payload.auth };
+      state.user = payload.auth;
     },
   },
 });
