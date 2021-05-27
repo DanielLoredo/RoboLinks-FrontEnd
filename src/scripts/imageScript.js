@@ -6,7 +6,7 @@ export const postLink = (file, update, linkUpdate) => {
   console.log(update);
   if (linkUpdate === true && file === null) {
     update.short_url = `http://rbgs.xyz/${update.short_link}`;
-    updateLink(update.id, update).then(() => window.location.reload());
+    updateLink(update.id, update);
   } else {
     const data = new FormData();
     let imageUrl = "";
@@ -22,13 +22,6 @@ export const postLink = (file, update, linkUpdate) => {
       .then((data) => {
         imageUrl = data.url;
         update.short_link = `http://rbgs.xyz/${update.short_link}`;
-        //let i;
-        //for (i = 0; i < update.tags.length; i++) {
-        //  update.tags[i] = update.tags[i].toLowerCase();
-        //}
-
-        console.log(update);
-        console.log(imageUrl);
 
         if (linkUpdate === true) {
           update.short_url = `http://rbgs.xyz/${update.short_link}`;
@@ -43,7 +36,6 @@ export const postLink = (file, update, linkUpdate) => {
             update.tags
           );
         }
-      })
-      .then(() => window.location.reload());
+      });
   }
 };
