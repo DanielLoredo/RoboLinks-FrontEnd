@@ -1,21 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import Snackbar from "@material-ui/core/Snackbar";
+import { useDispatch, useSelector } from 'react-redux';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import "./index.scss";
 
-import AddLinkCardButton from "./AddLinkCardButton";
-import LinkCardsCollection from "./LinkCardsCollection";
-import Alert from "../common/Alert";
+import AddLinkCardButton from './AddLinkCardButton';
+import LinkCardsCollection from './LinkCardsCollection';
+import Loading from './Loading.jsx';
+import ZeroState from './ZeroState.jsx';
+import NoResults from './NoResults.jsx';
+import Alert from '../common/Alert';
 
-import { useDynamicWidthOfComponent } from "../utils";
-import { getAllLinks as getAllLinksAction } from "../../store/links";
+import { useDynamicWidthOfComponent } from '../utils';
+import { 
+  getAllLinks as getAllLinksAction,
+  setIsLoadingLinks,
+  selectIsLoadingLinks,
+  selectShowLinksCollection,
+  selectShowZeroState,
+  selectShowNoResults,  
+} from "../../store/links";
 import { getAllLinks as getAllLinksApiRequest } from "../../scripts/apiScripts";
 
 import CreateLinkForm from "../CreateLinkForm";
 
 const LinkCardsSection = () => {
   const dispatch = useDispatch();
+  const isLoadingLinks = useSelector(selectIsLoadingLinks);
+  const showLinksCollection = useSelector(selectShowLinksCollection);
+  const showZeroState = useSelector(selectShowZeroState);
+  const showNoResults = useSelector(selectShowNoResults);  
 
   const linksContainerRef = useRef(null);
   // NOTE: no need for debounceTime, to minize update time as much as possible
@@ -29,9 +43,11 @@ const LinkCardsSection = () => {
   // If the request succeeds, the data is stored in the redux-store through an Action.
   // Otherwise, an Error is thrown.
   useEffect(() => {
+    dispatch(setIsLoadingLinks({ isLoading: true }));
     getAllLinksApiRequest()
       .then((response) => dispatch(getAllLinksAction({ links: response.data })))
       .catch((error) => {
+        dispatch(getAllLinksAction({ links: [] }));
         throw new Error(`Could not get all links.\n\nReason: ${error}`);
       });
   }, [dispatch]);
@@ -51,11 +67,14 @@ const LinkCardsSection = () => {
   return (
     <div className="Links-section">
       <div className="Links-container" ref={linksContainerRef}>
-        <LinkCardsCollection
+        {showLinksCollection && <LinkCardsCollection 
           handleCopySnackbar={handleCopySnackbar}
           linksContainerWidth={linksContainerWidth}
           setEditingUrl={setEditingUrl}
-        />
+        />}
+        {isLoadingLinks && <Loading />}
+        {showZeroState && <ZeroState/>}
+        {showNoResults && <NoResults/>}
       </div>
       <AddLinkCardButton />
       {editingUrl.editing ? (

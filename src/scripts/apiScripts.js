@@ -1,3 +1,5 @@
+import { ContactsOutlined } from "@material-ui/icons";
+
 const BACK_HOST_NAME = "http://rbgs.xyz/";
 
 const doFetch = async (queryString, methodValue, params) => {
@@ -93,6 +95,7 @@ export const createLink = async (url, short_url, title, priv, image, tags) => {
     image: image,
     tags: tags,
   };
+  console.log(params);
   return await doFetch(queryString, methodValue, params);
 };
 

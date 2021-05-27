@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
+// import { getDefaultImage } from '../../scripts/imageScript';
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
@@ -160,16 +161,23 @@ export default function CreateLinkForm({
 
   const deleteForm = () => {
     deleteLink(created_link_data.id);
+    alert("Delete data");
   };
 
   const submitForms = () => {
     // Function that makes a POST to the project's database
     // TODO: add POST function request and send json to backend
+
+    // if (image_selected === "") {
+    //   setImageSelected(getDefaultImage(link_data.tags[0]))
+    // }
+
     let update = link_data;
     update.tags = link_data.tags;
     update.private = private_button_state;
 
     // Cloudinary image upload
+
     postLink(image_selected, update, linkUpdate);
   };
 
@@ -210,9 +218,16 @@ export default function CreateLinkForm({
               InputProps={{
                 readOnly: true,
               }}
-              disabled
-              id="shorturl-readonly"
             />
+            <label htmlFor="icon-button-file">
+              <IconButton
+                aria-label="upload-image"
+                className="icon-btn"
+                component="span"
+              >
+                <WallpaperIcon style={{ fontSize: 40 }} />
+              </IconButton>
+            </label>
           </Grid>
           <Grid item xs={6} md={9}>
             <FormTextField

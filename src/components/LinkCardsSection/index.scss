@@ -6,6 +6,11 @@
 $links-viewport-height: calc(
   100vh - #{$navbar-height}
 );
+$links-section-vertical-padding: 50px;
+$links-empty-container-viewport-height: calc(
+  #{$links-viewport-height} -
+  #{$links-section-vertical-padding * 2}
+);
 
 
 .Links-section {
@@ -15,12 +20,45 @@ $links-viewport-height: calc(
   // grow bigger if all link-cards don't fit in viewport-height  
   min-height: $links-viewport-height;    
   position: relative;  
-  padding: 50px 100px;
+  padding: $links-section-vertical-padding 100px;
 
   .Links-container { 
     margin: 0 auto;    
     width: 100%;
     max-width: 1700px;
+
+    // Styles when not showing cards collection
+    & .Links-cards-collection--loading,
+    & .Links-cards-collection--no-results,
+    & .Links-cards-collection--zero-state {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: $links-empty-container-viewport-height;     
+    }
+    & .Links-cards-collection--loading .MuiCircularProgress-root {
+      width: 50px !important;
+      height: 50px !important;
+      color: $color-baby-blue;
+      display: flex;
+      justify-content: center;
+    }     
+    & .Links-cards-collection--no-results,
+    & .Links-cards-collection--zero-state {
+      flex-direction: column;
+      .No-results-title {
+        font-size: 30px;
+        font-weight: bold;
+        color: $color-baby-blue;
+        margin-bottom: 21px;
+        text-align: center;
+      }
+      .No-results-message {
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+      }
+    }
   }  
 
   @media screen and (max-width: $screen-width--mobile) {

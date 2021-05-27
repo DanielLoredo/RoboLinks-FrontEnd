@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import IconButton from "@material-ui/core/IconButton";
-import { NavigateBefore, NavigateNext } from "@material-ui/icons";
+import { useSelector } from 'react-redux';
+import IconButton from '@material-ui/core/IconButton';
+import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 
 import "./index.scss";
 
