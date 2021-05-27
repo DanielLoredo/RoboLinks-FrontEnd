@@ -177,7 +177,6 @@ export default function CreateLinkForm({
     update.private = private_button_state;
 
     // Cloudinary image upload
-
     postLink(image_selected, update, linkUpdate);
   };
 
@@ -207,7 +206,7 @@ export default function CreateLinkForm({
               variant="outlined"
               id="url-input"
               defaultValue={link_data ? link_data.URL : ""}
-              disabled={/*link_data ? true :*/ false}
+              disabled={/*link_data ? true : */ false}
               onChange={handleChangeURL}
             />
           </Grid>
@@ -218,16 +217,9 @@ export default function CreateLinkForm({
               InputProps={{
                 readOnly: true,
               }}
+              disabled
+              id="shorturl-readonly"
             />
-            <label htmlFor="icon-button-file">
-              <IconButton
-                aria-label="upload-image"
-                className="icon-btn"
-                component="span"
-              >
-                <WallpaperIcon style={{ fontSize: 40 }} />
-              </IconButton>
-            </label>
           </Grid>
           <Grid item xs={6} md={9}>
             <FormTextField
