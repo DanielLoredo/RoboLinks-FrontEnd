@@ -3,9 +3,9 @@ import { AddCircle } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import CreateLinkForm from "../../CreateLinkForm";
 import "./index.scss";
-import link_data from "./data.json";
 
 export default function AddLinkButton() {
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -31,7 +31,6 @@ export default function AddLinkButton() {
       <CreateLinkForm
         open={open}
         handleClose={handleClose}
-        created_link_data={link_data}
       />
     </>
   );

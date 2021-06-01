@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Snackbar from '@material-ui/core/Snackbar';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -12,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
+import Alert from '../common/Alert';
 // import { getDefaultImage } from '../../scripts/imageScript';
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
@@ -103,25 +105,37 @@ export default function CreateLinkForm({
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
+  const defaultLinkData = {
+      title: "",
+      URL: "",
+      short_link: "",
+      tags: [],
+      private: false
+  }
 
   const [private_button_state, setPrivateButtonState] = useState(
     created_link_data ? created_link_data.private : null
   );
 
   const [link_data, setLinkData] = useState(
-    created_link_data ? created_link_data : null
+    created_link_data ? created_link_data : defaultLinkData
   );
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
 
   const [image_selected, setImageSelected] = useState(null);
 
+  const [validations, setValidation] = useState(["", "", ""]);
+
+  const [isSnackbarOpened, setIsSnackbarOpened] = useState(false);
+
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+
   const handleChangeTag = (event, newValue) => {
-    //let tags = link_data.tags ? link_data.tags:[];
     const update = {
       title: "",
       URL: "",
-      short_link: "ROS",
+      short_link: "",
       tags: [],
       private: false,
     };
@@ -145,23 +159,41 @@ export default function CreateLinkForm({
     let update = link_data;
     update.title = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations]
+    validations_update[0] = ""
+    setValidation(validations_update)
   };
 
   const handleChangeURL = (event) => {
     let update = link_data;
     update.URL = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations]
+    validations_update[1] = ""
+    setValidation(validations_update)
   };
 
   const handleChangeShortLink = (event) => {
     let update = link_data;
     update.short_link = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations]
+    validations_update[2] = ""
+    setValidation(validations_update)
   };
 
   const deleteForm = () => {
-    deleteLink(created_link_data.id);
-    alert("Delete data");
+    deleteLink(created_link_data.id).then((result) => {
+      if (result.status === 200) {
+        handleClose();
+        setSnackBarMessage("Link deleted")
+        setIsSnackbarOpened(true)
+      } else {
+        throw new Error('Email-Server Error, Retry Later')
+      }
+    }, (error) => {
+      alert(`Something went wrong when deleting link! \n${error.text}`)
+    })
   };
 
   const submitForms = () => {
@@ -171,16 +203,44 @@ export default function CreateLinkForm({
     // if (image_selected === "") {
     //   setImageSelected(getDefaultImage(link_data.tags[0]))
     // }
+    if (link_data.title && link_data.URL && link_data.short_link){
+      let update = link_data;
+      update.tags = link_data.tags;
+      update.private = private_button_state;
 
-    let update = link_data;
-    update.tags = link_data.tags;
-    update.private = private_button_state;
+      // Cloudinary image upload
+      postLink(image_selected, update, linkUpdate).then((result) => {
+        if (result.status === 200) {
+          handleClose();
+          setSnackBarMessage("Link saved")
+          setIsSnackbarOpened(true)
+          setLinkData(defaultLinkData)
+        } else if(result.status === 500) {
+          setSnackBarMessage("Repeated title or short link, please change it")
+          setIsSnackbarOpened(true)
+        } else {
+          throw new Error('Email-Server Error, Retry Later')
+        }
+      }, (error) => {
+        alert(`Something went wrong when saving link! \n${error.text}`)
+      })
+    }else{
+      let title_helperText = link_data.title ? "" : "Please fill title";
+      let short_link_helperText = link_data.URL ? "" : "Please fill short link";
+      let url_helperText = link_data.URL ? "" : "Please fill URL";
+      setValidation([title_helperText, short_link_helperText, url_helperText])
+    }
+  };
 
-    // Cloudinary image upload
-    postLink(image_selected, update, linkUpdate);
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setIsSnackbarOpened(false);
   };
 
   return (
+    <>
     <Modal
       style={modalStyle}
       className={classes.paper}
@@ -198,6 +258,8 @@ export default function CreateLinkForm({
               id="link-title-input"
               defaultValue={link_data ? link_data.title : ""}
               onChange={handleChangeTitle}
+              error={validations[0]}
+              helperText={validations[0]}
             />
           </Grid>
           <Grid item xs={12}>
@@ -208,6 +270,8 @@ export default function CreateLinkForm({
               defaultValue={link_data ? link_data.URL : ""}
               disabled={/*link_data ? true : */ false}
               onChange={handleChangeURL}
+              error={validations[1]}
+              helperText={validations[1]}
             />
           </Grid>
           <Grid item xs={6} md={3}>
@@ -227,6 +291,8 @@ export default function CreateLinkForm({
               id="shorturl-input"
               defaultValue={link_data ? link_data.short_link : null}
               onChange={handleChangeShortLink}
+              error={validations[2]}
+              helperText={validations[2]}
             />
           </Grid>
           <Grid item xs={6} className="tags">
@@ -311,5 +377,19 @@ export default function CreateLinkForm({
         </Grid>
       </form>
     </Modal>
+    <Snackbar
+    anchorOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    open={isSnackbarOpened}
+    autoHideDuration={3000}
+    onClose={handleCloseSnackBar}
+  >
+    <Alert onClose={handleCloseSnackBar} severity="success">
+      {snackBarMessage}
+    </Alert>
+  </Snackbar>
+  </>
   );
 }
