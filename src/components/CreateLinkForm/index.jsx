@@ -113,7 +113,7 @@ export default function CreateLinkForm({
   };
 
   const [private_button_state, setPrivateButtonState] = useState(
-    created_link_data ? created_link_data.private : null
+    created_link_data ? created_link_data.private : false
   );
 
   const [link_data, setLinkData] = useState(
