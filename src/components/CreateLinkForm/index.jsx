@@ -165,12 +165,11 @@ export default function CreateLinkForm({
   };
 
   const submitForms = () => {
-    // Function that makes a POST to the project's database
     // TODO: add POST function request and send json to backend
 
-    // if (image_selected === "") {
-    //   setImageSelected(getDefaultImage(link_data.tags[0]))
-    // }
+    if (image_selected === "") {
+      setImageSelected(getDefaultImage(link_data.tags[0]))
+    }
 
     let update = link_data;
     update.tags = link_data.tags;
