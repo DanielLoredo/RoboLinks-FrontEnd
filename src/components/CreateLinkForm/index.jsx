@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from "@material-ui/core/Snackbar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
-import Alert from '../common/Alert';
+import Alert from "../common/Alert";
 // import { getDefaultImage } from '../../scripts/imageScript';
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
@@ -101,17 +101,16 @@ export default function CreateLinkForm({
   linkUpdate,
 }) {
   const classes = useStyles();
-  console.log(created_link_data);
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
   const defaultLinkData = {
-      title: "",
-      URL: "",
-      short_link: "",
-      tags: [],
-      private: false
-  }
+    title: "",
+    URL: "",
+    short_link: "",
+    tags: [],
+    private: false,
+  };
 
   const [private_button_state, setPrivateButtonState] = useState(
     created_link_data ? created_link_data.private : null
@@ -159,41 +158,44 @@ export default function CreateLinkForm({
     let update = link_data;
     update.title = event.target.value;
     setLinkData(update);
-    let validations_update = [...validations]
-    validations_update[0] = ""
-    setValidation(validations_update)
+    let validations_update = [...validations];
+    validations_update[0] = "";
+    setValidation(validations_update);
   };
 
   const handleChangeURL = (event) => {
     let update = link_data;
     update.URL = event.target.value;
     setLinkData(update);
-    let validations_update = [...validations]
-    validations_update[1] = ""
-    setValidation(validations_update)
+    let validations_update = [...validations];
+    validations_update[1] = "";
+    setValidation(validations_update);
   };
 
   const handleChangeShortLink = (event) => {
     let update = link_data;
     update.short_link = event.target.value;
     setLinkData(update);
-    let validations_update = [...validations]
-    validations_update[2] = ""
-    setValidation(validations_update)
+    let validations_update = [...validations];
+    validations_update[2] = "";
+    setValidation(validations_update);
   };
 
   const deleteForm = () => {
-    deleteLink(created_link_data.id).then((result) => {
-      if (result.status === 200) {
-        handleClose();
-        setSnackBarMessage("Link deleted")
-        setIsSnackbarOpened(true)
-      } else {
-        throw new Error('Email-Server Error, Retry Later')
+    deleteLink(created_link_data.id).then(
+      (result) => {
+        if (result.status === 200) {
+          handleClose();
+          setSnackBarMessage("Link deleted");
+          setIsSnackbarOpened(true);
+        } else {
+          throw new Error("Email-Server Error, Retry Later");
+        }
+      },
+      (error) => {
+        alert(`Something went wrong when deleting link! \n${error.text}`);
       }
-    }, (error) => {
-      alert(`Something went wrong when deleting link! \n${error.text}`)
-    })
+    );
   };
 
   const submitForms = () => {
@@ -203,32 +205,38 @@ export default function CreateLinkForm({
     // if (image_selected === "") {
     //   setImageSelected(getDefaultImage(link_data.tags[0]))
     // }
-    if (link_data.title && link_data.URL && link_data.short_link){
+
+    if (link_data.title && link_data.URL && link_data.short_link) {
       let update = link_data;
       update.tags = link_data.tags;
       update.private = private_button_state;
 
       // Cloudinary image upload
-      postLink(image_selected, update, linkUpdate).then((result) => {
-        if (result.status === 200) {
-          handleClose();
-          setSnackBarMessage("Link saved")
-          setIsSnackbarOpened(true)
-          setLinkData(defaultLinkData)
-        } else if(result.status === 500) {
-          setSnackBarMessage("Repeated title or short link, please change it")
-          setIsSnackbarOpened(true)
-        } else {
-          throw new Error('Email-Server Error, Retry Later')
+      postLink(image_selected, update, linkUpdate).then(
+        (result) => {
+          if (result.status === 200) {
+            handleClose();
+            setSnackBarMessage("Link saved");
+            setIsSnackbarOpened(true);
+            setLinkData(defaultLinkData);
+          } else if (result.status === 200) {
+            setSnackBarMessage(
+              "Repeated title or short link, please change it"
+            );
+            setIsSnackbarOpened(true);
+          } else {
+            throw new Error("Email-Server Error, Retry Later");
+          }
+        },
+        (error) => {
+          alert(`Something went wrong when saving link! \n${error.text}`);
         }
-      }, (error) => {
-        alert(`Something went wrong when saving link! \n${error.text}`)
-      })
-    }else{
+      );
+    } else {
       let title_helperText = link_data.title ? "" : "Please fill title";
       let short_link_helperText = link_data.URL ? "" : "Please fill short link";
       let url_helperText = link_data.URL ? "" : "Please fill URL";
-      setValidation([title_helperText, short_link_helperText, url_helperText])
+      setValidation([title_helperText, short_link_helperText, url_helperText]);
     }
   };
 
@@ -241,155 +249,162 @@ export default function CreateLinkForm({
 
   return (
     <>
-    <Modal
-      style={modalStyle}
-      className={classes.paper}
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
-    >
-      <form className="LinkForm" noValidate autoComplete="off">
-        <Grid container justify="space-evenly" alignItems="center" spacing={2}>
-          <Grid item xs={12}>
-            <FormTextField
-              label="Link Title"
-              variant="outlined"
-              id="link-title-input"
-              defaultValue={link_data ? link_data.title : ""}
-              onChange={handleChangeTitle}
-              error={validations[0]}
-              helperText={validations[0]}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormTextField
-              label="URL"
-              variant="outlined"
-              id="url-input"
-              defaultValue={link_data ? link_data.URL : ""}
-              disabled={/*link_data ? true : */ false}
-              onChange={handleChangeURL}
-              error={validations[1]}
-              helperText={validations[1]}
-            />
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <FormTextField
-              label="Short URL"
-              defaultValue="rbgs.xyz/"
-              InputProps={{
-                readOnly: true,
-              }}
-              disabled
-              id="shorturl-readonly"
-            />
-          </Grid>
-          <Grid item xs={6} md={9}>
-            <FormTextField
-              variant="outlined"
-              id="shorturl-input"
-              defaultValue={link_data ? link_data.short_link : null}
-              onChange={handleChangeShortLink}
-              error={validations[2]}
-              helperText={validations[2]}
-            />
-          </Grid>
-          <Grid item xs={6} className="tags">
-            <p className="icon-tag">Tags</p>
-            <div className={classes.root}>
-              <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={false}
-                onChange={handleChangeTag}
-                aria-label="Vertical tabs example"
-                className={classes.tabs}
-                scrollButtons="on"
-              >
-                {link_tags.map((tag, id) => (
-                  <Tab
-                    key={id}
-                    label={tag}
-                    {...a11yProps(id)}
-                    style={{
-                      backgroundColor:
-                        tag_color[link_data.tags.includes(tag) ? 1 : 0],
-                      color: tag_text[link_data.tags.includes(tag) ? 1 : 0],
-                      margin: "1vh 0 0 0",
-                    }}
-                  />
-                ))}
-              </Tabs>
-            </div>
-          </Grid>
-          <Grid container item spacing={0} xs={6}>
-            <Grid item xs={6}>
-              <p className="icon-tag">Subir imagen</p>
-              <input
-                accept="image/*"
-                className={classes.input}
-                id="icon-button-file"
-                type="file"
-                onChange={(e) => {
-                  setImageSelected(e.target.files[0]);
-                }}
+      <Modal
+        style={modalStyle}
+        className={classes.paper}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <form className="LinkForm" noValidate autoComplete="off">
+          <Grid
+            container
+            justify="space-evenly"
+            alignItems="center"
+            spacing={2}
+          >
+            <Grid item xs={12}>
+              <FormTextField
+                label="Link Title"
+                variant="outlined"
+                id="link-title-input"
+                defaultValue={link_data ? link_data.title : ""}
+                onChange={handleChangeTitle}
+                error={validations[0]}
+                helperText={validations[0]}
               />
-              <label htmlFor="icon-button-file">
-                <IconButton
-                  aria-label="upload-image"
-                  className="icon-btn"
-                  component="span"
+            </Grid>
+            <Grid item xs={12}>
+              <FormTextField
+                label="URL"
+                variant="outlined"
+                id="url-input"
+                defaultValue={link_data ? link_data.URL : ""}
+                disabled={/*link_data ? true : */ false}
+                onChange={handleChangeURL}
+                error={validations[1]}
+                helperText={validations[1]}
+              />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <FormTextField
+                label="Short URL"
+                defaultValue="rbgs.xyz/"
+                InputProps={{
+                  readOnly: true,
+                }}
+                disabled
+                id="shorturl-readonly"
+              />
+            </Grid>
+            <Grid item xs={6} md={9}>
+              <FormTextField
+                variant="outlined"
+                id="shorturl-input"
+                defaultValue={link_data ? link_data.short_link : null}
+                onChange={handleChangeShortLink}
+                error={validations[2]}
+                helperText={validations[2]}
+              />
+            </Grid>
+            <Grid item xs={6} className="tags">
+              <p className="icon-tag">Tags</p>
+              <div className={classes.root}>
+                <Tabs
+                  orientation="vertical"
+                  variant="scrollable"
+                  value={false}
+                  onChange={handleChangeTag}
+                  aria-label="Vertical tabs example"
+                  className={classes.tabs}
+                  scrollButtons="on"
                 >
-                  <WallpaperIcon style={{ fontSize: 40 }} />
-                </IconButton>
-              </label>
-            </Grid>
-            <Grid item xs={6}>
-              <IconButton
-                aria-label="delete"
-                className="single-icon-btn"
-                onClick={deleteForm}
-              >
-                <DeleteIcon style={{ fontSize: 60 }} />
-              </IconButton>
-            </Grid>
-            <Grid item xs={6}>
-              <p className="icon-tag">Privado</p>
-              <div className="switch-private">
-                <PrivateSwitch
-                  checked={private_button_state}
-                  onChange={handleChangePrivateSwitch}
-                  name="checkedA"
-                />
+                  {link_tags.map((tag, id) => (
+                    <Tab
+                      key={id}
+                      label={tag}
+                      {...a11yProps(id)}
+                      style={{
+                        backgroundColor:
+                          tag_color[link_data.tags.includes(tag) ? 1 : 0],
+                        color: tag_text[link_data.tags.includes(tag) ? 1 : 0],
+                        margin: "1vh 0 0 0",
+                      }}
+                    />
+                  ))}
+                </Tabs>
               </div>
             </Grid>
-            <Grid item xs={6}>
-              <IconButton
-                aria-label="submit"
-                className="single-icon-btn"
-                onClick={submitForms}
-              >
-                <CheckCircleIcon style={{ fontSize: 60, color: blue_color }} />
-              </IconButton>
+            <Grid container item spacing={0} xs={6}>
+              <Grid item xs={6}>
+                <p className="icon-tag">Subir imagen</p>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="icon-button-file"
+                  type="file"
+                  onChange={(e) => {
+                    setImageSelected(e.target.files[0]);
+                  }}
+                />
+                <label htmlFor="icon-button-file">
+                  <IconButton
+                    aria-label="upload-image"
+                    className="icon-btn"
+                    component="span"
+                  >
+                    <WallpaperIcon style={{ fontSize: 40 }} />
+                  </IconButton>
+                </label>
+              </Grid>
+              <Grid item xs={6}>
+                <IconButton
+                  aria-label="delete"
+                  className="single-icon-btn"
+                  onClick={deleteForm}
+                >
+                  <DeleteIcon style={{ fontSize: 60 }} />
+                </IconButton>
+              </Grid>
+              <Grid item xs={6}>
+                <p className="icon-tag">Privado</p>
+                <div className="switch-private">
+                  <PrivateSwitch
+                    checked={private_button_state}
+                    onChange={handleChangePrivateSwitch}
+                    name="checkedA"
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <IconButton
+                  aria-label="submit"
+                  className="single-icon-btn"
+                  onClick={submitForms}
+                >
+                  <CheckCircleIcon
+                    style={{ fontSize: 60, color: blue_color }}
+                  />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Modal>
-    <Snackbar
-    anchorOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    open={isSnackbarOpened}
-    autoHideDuration={3000}
-    onClose={handleCloseSnackBar}
-  >
-    <Alert onClose={handleCloseSnackBar} severity="success">
-      {snackBarMessage}
-    </Alert>
-  </Snackbar>
-  </>
+        </form>
+      </Modal>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={isSnackbarOpened}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="success">
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

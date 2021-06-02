@@ -95,7 +95,9 @@ export const createLink = async (url, short_url, title, priv, image, tags) => {
     image: image,
     tags: tags,
   };
-  console.log(params);
+  //console.log(params);
+  return doFetch(queryString, methodValue, params);
+
   return await doFetch(queryString, methodValue, params);
 };
 

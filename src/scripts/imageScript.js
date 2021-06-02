@@ -1,10 +1,8 @@
-
 import { createLink, updateLink } from "./apiScripts";
 
 const BACK_HOST_NAME = "https://api.cloudinary.com/v1_1/dyhu4pqet/image/upload";
 
-export const postLink = (file, update, linkUpdate) => {
-  console.log(update);
+export const postLink = async (file, update, linkUpdate) => {
   if (linkUpdate === true && file === null) {
     update.short_url = `http://rbgs.xyz/${update.short_link}`;
     updateLink(update.id, update);
@@ -15,7 +13,8 @@ export const postLink = (file, update, linkUpdate) => {
     data.append("upload_preset", "idvc02qa");
     data.append("cloud_name", "dyhu4pqet");
 
-    fetch(BACK_HOST_NAME, {
+    //MISSING RETURN
+    return fetch(BACK_HOST_NAME, {
       method: "post",
       body: data,
     })
@@ -28,7 +27,7 @@ export const postLink = (file, update, linkUpdate) => {
           update.short_url = `http://rbgs.xyz/${update.short_link}`;
           updateLink(update.id, { ...update, image: imageUrl });
         } else {
-          createLink(
+          return createLink(
             update.URL,
             update.short_link,
             update.title,
