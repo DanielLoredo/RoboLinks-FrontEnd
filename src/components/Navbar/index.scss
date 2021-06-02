@@ -1,5 +1,10 @@
 @import "/src/components/colors.scss";
+@import '/src/components/media-queries-triggers.scss';
 @import "./variables.scss";
+
+
+$avatar-size: 50px;
+$avatar-size--mobile: 40px;
 
 .Navbar {
   background-color: $color-black;
@@ -52,14 +57,40 @@
 
   .Navbar-avatar {
     color: $color-baby-blue;
-    height: 50px;
-    width: 50px;
+    height: $avatar-size;
+    width: $avatar-size;
     // Avoid sizes to shrink when few space left
-    min-height: 50px;
-    min-width: 50px;
+    min-height: $avatar-size;
+    min-width: $avatar-size;
 
     &-logged {
       color: $color-platinum;
     }
   }
+
+  @media screen and (max-width: $screen-width--mobile) {
+    padding: 0 15px;
+
+    .Navbar-logo {
+      width: 60px;
+      margin-right:10px;
+    } 
+    .Navbar-search-links {
+      padding: 10px;
+      padding-left: 20px;      
+      .Navbar-search-links-input {
+        font-size: 16px;
+      }      
+      .Navbar-search-links-icon {
+        width: 28px;
+        height: 28px;
+      }    
+    }
+    .Navbar-avatar {
+      height: $avatar-size--mobile;
+      width: $avatar-size--mobile;
+      min-height: $avatar-size--mobile;
+      min-width: $avatar-size--mobile;
+    }    
+  }     
 }
