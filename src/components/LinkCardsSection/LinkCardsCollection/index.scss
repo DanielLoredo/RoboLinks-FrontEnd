@@ -3,6 +3,7 @@
 @import '/src/components/media-queries-triggers.scss';
 @import './LinkCard/variables.scss';
 
+$carrousel-nav-icon-size: 50px;
 
 .Big-cards-container {
   margin-bottom: 50px;
@@ -41,17 +42,17 @@
     .Navigate-right-icon,
     .Navigate-left-icon {
       color: $color-baby-blue;
-      width: 50px;
-      height: 50px;
+      width: $carrousel-nav-icon-size;
+      height: $carrousel-nav-icon-size;
     }
   }
   // Place left carrousel-button before first link-card
   .Navigate-left-button {
-    left: -50px;
+    left: -$carrousel-nav-icon-size;
   }     
   // Place right carrousel-button after first link-card
   .Navigate-right-button {
-    right: -50px;
+    right: -$carrousel-nav-icon-size;
   }      
   .Cards-carrousel-container {
     // Hide extra link-cards to have visibility of 
