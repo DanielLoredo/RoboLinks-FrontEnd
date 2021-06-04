@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
-// import { getDefaultImage } from '../../scripts/imageScript';
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
@@ -133,6 +132,7 @@ export default function CreateLinkForm({
     } else {
       tag_update.push(link_tags[newValue]);
     }
+    console.log(tag_update);
     update.tags = tag_update;
     setLinkData(update);
   };
@@ -166,11 +166,6 @@ export default function CreateLinkForm({
 
   const submitForms = () => {
     // TODO: add POST function request and send json to backend
-
-    if (image_selected === "") {
-      setImageSelected(getDefaultImage(link_data.tags[0]))
-    }
-
     let update = link_data;
     update.tags = link_data.tags;
     update.private = private_button_state;

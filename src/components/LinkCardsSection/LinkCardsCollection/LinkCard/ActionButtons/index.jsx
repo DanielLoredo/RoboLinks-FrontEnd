@@ -19,7 +19,9 @@ const LinkCardActionButtons = ({
 
   const editUrl = () => {
     let link = links.filter((el) => el.short_url.substring(7) === short_url);
+    console.log(link);
     let priv = link[0].private === 0 ? false : true;
+
     setEditingUrl({
       editing: true,
       url: {
