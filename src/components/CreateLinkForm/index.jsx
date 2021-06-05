@@ -208,7 +208,14 @@ export default function CreateLinkForm({
 
     if (link_data.title && link_data.URL && link_data.short_link) {
       let update = link_data;
+
       update.tags = link_data.tags;
+
+      //If the user didn´t chose a tag, one is given by default
+      if (update.tags.length === 0) {
+        update.tags = ["github"];
+      }
+
       update.private = private_button_state;
 
       // Cloudinary image upload

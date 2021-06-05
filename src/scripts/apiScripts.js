@@ -135,6 +135,7 @@ export const deleteLink = async (id) => {
 export const updateLink = async (id, params) => {
   const queryString = `api/links/${id}`;
   const methodValue = "PATCH";
+  console.log(params);
   return doFetch(queryString, methodValue, params);
 };
 
