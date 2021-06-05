@@ -113,7 +113,7 @@ export default function CreateLinkForm({
   };
 
   const [private_button_state, setPrivateButtonState] = useState(
-    created_link_data ? created_link_data.private : null
+    created_link_data ? created_link_data.private : 0
   );
 
   const [link_data, setLinkData] = useState(
@@ -214,6 +214,7 @@ export default function CreateLinkForm({
       // Cloudinary image upload
       postLink(image_selected, update, linkUpdate).then(
         (result) => {
+          console.log(result);
           if (result.status === 200) {
             handleClose();
             setSnackBarMessage("Link saved");

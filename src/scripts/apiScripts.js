@@ -110,7 +110,7 @@ export const deleteLink = async (id) => {
   const queryString = `api/links/${id}`;
   const methodValue = "DELETE";
   const params = null;
-  return await doFetch(queryString, methodValue, params);
+  return doFetch(queryString, methodValue, params);
 };
 
 /**
@@ -135,7 +135,7 @@ export const deleteLink = async (id) => {
 export const updateLink = async (id, params) => {
   const queryString = `api/links/${id}`;
   const methodValue = "PATCH";
-  return await doFetch(queryString, methodValue, params);
+  return doFetch(queryString, methodValue, params);
 };
 
 /**

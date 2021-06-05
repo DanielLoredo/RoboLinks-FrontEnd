@@ -5,7 +5,7 @@ const BACK_HOST_NAME = "https://api.cloudinary.com/v1_1/dyhu4pqet/image/upload";
 export const postLink = async (file, update, linkUpdate) => {
   if (linkUpdate === true && file === null) {
     update.short_url = `http://rbgs.xyz/${update.short_link}`;
-    updateLink(update.id, update);
+    return updateLink(update.id, update);
   } else {
     const data = new FormData();
     let imageUrl = "";
