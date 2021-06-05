@@ -233,7 +233,9 @@ export default function CreateLinkForm({
       );
     } else {
       let title_helperText = link_data.title ? "" : "Please fill title";
-      let short_link_helperText = link_data.short_link ? "" : "Please fill short link";
+      let short_link_helperText = link_data.short_link
+        ? ""
+        : "Please fill short link";
       let url_helperText = link_data.URL ? "" : "Please fill URL";
       setValidation([title_helperText, short_link_helperText, url_helperText]);
     }
