@@ -113,7 +113,7 @@ export default function CreateLinkForm({
   };
 
   const [private_button_state, setPrivateButtonState] = useState(
-    created_link_data ? created_link_data.private : 0
+    created_link_data ? created_link_data.private : false
   );
 
   const [link_data, setLinkData] = useState(
@@ -214,13 +214,13 @@ export default function CreateLinkForm({
       // Cloudinary image upload
       postLink(image_selected, update, linkUpdate).then(
         (result) => {
-          console.log(result);
+          alert(JSON.stringify(result));
           if (result.status === 200) {
             handleClose();
             setSnackBarMessage("Link saved");
             setIsSnackbarOpened(true);
             setLinkData(defaultLinkData);
-          } else if (result.status === 200) {
+          } else if (result.status === 500) {
             setSnackBarMessage(
               "Repeated title or short link, please change it"
             );
@@ -235,7 +235,9 @@ export default function CreateLinkForm({
       );
     } else {
       let title_helperText = link_data.title ? "" : "Please fill title";
-      let short_link_helperText = link_data.URL ? "" : "Please fill short link";
+      let short_link_helperText = link_data.short_link
+        ? ""
+        : "Please fill short link";
       let url_helperText = link_data.URL ? "" : "Please fill URL";
       setValidation([title_helperText, short_link_helperText, url_helperText]);
     }
