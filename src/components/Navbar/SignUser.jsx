@@ -58,8 +58,11 @@ function SignUser() {
   const user = useSelector(selectUser);
 
   const [isSnackbarOpened, setIsSnackbarOpened] = React.useState(false);
+  const [userImage, setUserImage] = React.useState(null);
 
   const responseGoogle = (response) => {
+    setUserImage(response.profileObj.imageUrl);
+
     let userEmail = response.profileObj.email;
     getUserTypeByEmail(userEmail)
       .then((response) => {
@@ -94,19 +97,31 @@ function SignUser() {
 
   return (
     <div>
-      <StyledButton
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        startIcon={
-          <AccountCircle
-            alt="Avatar fallback icon"
-            className={
-              signedIn ? "Navbar-avatar Navbar-avatar-logged" : "Navbar-avatar"
-            }
-          />
-        }
-      ></StyledButton>
+      {
+        <StyledButton
+          aria-controls="customized-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          startIcon={
+            signedIn === false ? (
+              <AccountCircle
+                alt="Avatar fallback icon"
+                className={
+                  signedIn
+                    ? "Navbar-avatar Navbar-avatar-logged"
+                    : "Navbar-avatar"
+                }
+              />
+            ) : (
+              <img
+                className="Navbar-avatar Navbar-avatar-user"
+                src={userImage}
+                alt="Avatar"
+              />
+            )
+          }
+        ></StyledButton>
+      }
       {signedIn === false && (
         <StyledMenu
           id="customized-menu"

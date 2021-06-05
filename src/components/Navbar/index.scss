@@ -1,7 +1,6 @@
 @import "/src/components/colors.scss";
-@import '/src/components/media-queries-triggers.scss';
+@import "/src/components/media-queries-triggers.scss";
 @import "./variables.scss";
-
 
 $avatar-size: 50px;
 $avatar-size--mobile: 40px;
@@ -66,6 +65,10 @@ $avatar-size--mobile: 40px;
     &-logged {
       color: $color-platinum;
     }
+
+    &-user {
+      border-radius: 50%;
+    }
   }
 
   @media screen and (max-width: $screen-width--mobile) {
@@ -73,24 +76,24 @@ $avatar-size--mobile: 40px;
 
     .Navbar-logo {
       width: 60px;
-      margin-right:10px;
-    } 
+      margin-right: 10px;
+    }
     .Navbar-search-links {
       padding: 10px;
-      padding-left: 20px;      
+      padding-left: 20px;
       .Navbar-search-links-input {
         font-size: 16px;
-      }      
+      }
       .Navbar-search-links-icon {
         width: 28px;
         height: 28px;
-      }    
+      }
     }
     .Navbar-avatar {
       height: $avatar-size--mobile;
       width: $avatar-size--mobile;
       min-height: $avatar-size--mobile;
       min-width: $avatar-size--mobile;
-    }    
-  }     
+    }
+  }
 }
