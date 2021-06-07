@@ -39,6 +39,8 @@ const LinkCardsSection = () => {
 
   const [editingUrl, setEditingUrl] = useState({ editing: false, url: {} });
 
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+
   // Request all links data to API.
   // If the request succeeds, the data is stored in the redux-store through an Action.
   // Otherwise, an Error is thrown.
@@ -52,7 +54,11 @@ const LinkCardsSection = () => {
       });
   }, [dispatch]);
 
-  const handleCopySnackbar = () => setIsSnackbarOpened(true);
+  const handleCopySnackbar = () => {
+    setSnackBarMessage("Link copied to clipboard")
+    setIsSnackbarOpened(true)
+  }
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -62,6 +68,18 @@ const LinkCardsSection = () => {
 
   const handleCloseModal = () => {
     setEditingUrl({ editing: false, url: {} });
+  };
+
+  const handleOpenModal = () => {
+    setEditingUrl({
+      editing: true,
+      url: null
+    });
+  };
+
+  const triggerSnackbarMessage = (message) => {
+    setSnackBarMessage(message)
+    setIsSnackbarOpened(true)
   };
 
   return (
@@ -76,13 +94,16 @@ const LinkCardsSection = () => {
         {showZeroState && <ZeroState/>}
         {showNoResults && <NoResults/>}
       </div>
-      <AddLinkCardButton />
+      <AddLinkCardButton
+        handleOpen={handleOpenModal}
+      />
       {editingUrl.editing ? (
         <CreateLinkForm
           open={editingUrl.editing}
           handleClose={handleCloseModal}
           created_link_data={editingUrl.url}
           linkUpdate={true}
+          triggerSnackbar={triggerSnackbarMessage}
         />
       ) : null}
       <Snackbar
@@ -95,7 +116,7 @@ const LinkCardsSection = () => {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="success">
-          Link copied to clipboard
+          {snackBarMessage}
         </Alert>
       </Snackbar>
     </div>

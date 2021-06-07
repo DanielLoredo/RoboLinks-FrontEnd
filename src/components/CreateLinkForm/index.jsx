@@ -4,7 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Snackbar from "@material-ui/core/Snackbar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -95,10 +94,11 @@ function getModalStyle() {
 }
 
 export default function CreateLinkForm({
-  created_link_data,
   open,
   handleClose,
+  created_link_data,
   linkUpdate,
+  triggerSnackbar,
 }) {
   const classes = useStyles();
 
@@ -116,28 +116,19 @@ export default function CreateLinkForm({
     created_link_data ? created_link_data.private : false
   );
 
-  const [link_data, setLinkData] = useState(
-    created_link_data ? created_link_data : defaultLinkData
-  );
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
 
   const [image_selected, setImageSelected] = useState(null);
 
   const [validations, setValidation] = useState(["", "", ""]);
-
-  const [isSnackbarOpened, setIsSnackbarOpened] = useState(false);
-
-  const [snackBarMessage, setSnackBarMessage] = useState("");
+  
+  const [link_data, setLinkData] = useState(
+    created_link_data ? created_link_data : defaultLinkData
+  );
 
   const handleChangeTag = (event, newValue) => {
-    const update = {
-      title: "",
-      URL: "",
-      short_link: "",
-      tags: [],
-      private: false,
-    };
+    const update = defaultLinkData
     Object.assign(update, link_data);
     let tag_update = [...update.tags];
 
@@ -185,9 +176,9 @@ export default function CreateLinkForm({
     deleteLink(created_link_data.id).then(
       (result) => {
         if (result.status === 200) {
-          handleClose();
-          setSnackBarMessage("Link deleted");
-          setIsSnackbarOpened(true);
+          setLinkData(defaultLinkData);
+          handleClose()
+          triggerSnackbar("Link deleted")
         } else {
           throw new Error("Email-Server Error, Retry Later");
         }
@@ -211,31 +202,34 @@ export default function CreateLinkForm({
 
       //If the user didn´t chose a tag, one is given by default
       if (update.tags.length === 0) {
-        update.tags = ["github"];
+        update.tags = ["contests"];
       }
 
-      update.private = private_button_state;
+      update.private = private_button_state
 
       // Cloudinary image upload
       postLink(image_selected, update, linkUpdate).then(
         (result) => {
-          alert(JSON.stringify(result));
           if (result.status === 200) {
-            handleClose();
-            setSnackBarMessage("Link saved");
-            setIsSnackbarOpened(true);
-            setLinkData(defaultLinkData);
+            let message = created_link_data != null ? "Link updated" : "Link saved"
+            triggerSnackbar(message)
+            setLinkData(defaultLinkData)
+            handleClose()
           } else if (result.status === 500) {
-            setSnackBarMessage(
-              "Repeated title or short link, please change it"
-            );
-            setIsSnackbarOpened(true);
+            triggerSnackbar(
+              "Repeated title, URL, or short link, please change it"
+            )
           } else {
-            throw new Error("Email-Server Error, Retry Later");
+            alert(JSON.stringify(update, null, 4))
+            alert(JSON.stringify(result, null, 4))
+            triggerSnackbar("Email-Server error, retry later")
+            // throw new Error("Email-Server Error, Retry Later");
           }
         },
         (error) => {
-          alert(`Something went wrong when saving link! \n${error.text}`);
+          triggerSnackbar(
+            `Something went wrong when saving link! \n${error.text}`
+          );
         }
       );
     } else {
@@ -248,171 +242,149 @@ export default function CreateLinkForm({
     }
   };
 
-  const handleCloseSnackBar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setIsSnackbarOpened(false);
-  };
-
   return (
-    <>
-      <Modal
-        style={modalStyle}
-        className={classes.paper}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        <form className="LinkForm" noValidate autoComplete="off">
-          <Grid
-            container
-            justify="space-evenly"
-            alignItems="center"
-            spacing={2}
-          >
-            <Grid item xs={12}>
-              <FormTextField
-                label="Link Title"
-                variant="outlined"
-                id="link-title-input"
-                defaultValue={link_data ? link_data.title : ""}
-                onChange={handleChangeTitle}
-                error={validations[0]}
-                helperText={validations[0]}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormTextField
-                label="URL"
-                variant="outlined"
-                id="url-input"
-                defaultValue={link_data ? link_data.URL : ""}
-                disabled={/*link_data ? true : */ false}
-                onChange={handleChangeURL}
-                error={validations[1]}
-                helperText={validations[1]}
-              />
-            </Grid>
-            <Grid item xs={6} md={3}>
-              <FormTextField
-                label="Short URL"
-                defaultValue="rbgs.xyz/"
-                InputProps={{
-                  readOnly: true,
+    <Modal
+      style={modalStyle}
+      className={classes.paper}
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+    >
+      <form className="LinkForm" noValidate autoComplete="off">
+        <Grid
+          container
+          justify="space-evenly"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item xs={12}>
+            <FormTextField
+              label="Link Title"
+              variant="outlined"
+              id="link-title-input"
+              defaultValue={link_data ? link_data.title : ""}
+              onChange={handleChangeTitle}
+              error={validations[0]}
+              helperText={validations[0]}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormTextField
+              label="URL"
+              variant="outlined"
+              id="url-input"
+              defaultValue={link_data ? link_data.URL : ""}
+              disabled={created_link_data ? true : false}
+              onChange={handleChangeURL}
+              error={validations[1]}
+              helperText={validations[1]}
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <FormTextField
+              label="Short URL"
+              defaultValue="rbgs.xyz/"
+              InputProps={{
+                readOnly: true,
+              }}
+              disabled
+              id="shorturl-readonly"
+            />
+          </Grid>
+          <Grid item xs={6} md={9}>
+            <FormTextField
+              variant="outlined"
+              id="shorturl-input"
+              defaultValue={link_data ? link_data.short_link : null}
+              onChange={handleChangeShortLink}
+              error={validations[2]}
+              helperText={validations[2]}
+            />
+          </Grid>
+          <Grid item xs={6} className="tags">
+            <p className="icon-tag">Tags</p>
+            <div className={classes.root}>
+              <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={false}
+                onChange={handleChangeTag}
+                aria-label="Vertical tabs example"
+                className={classes.tabs}
+                scrollButtons="on"
+              >
+                {link_tags.map((tag, id) => (
+                  <Tab
+                    key={id}
+                    label={tag}
+                    {...a11yProps(id)}
+                    style={{
+                      backgroundColor:
+                        tag_color[link_data.tags.includes(tag) ? 1 : 0],
+                      color: tag_text[link_data.tags.includes(tag) ? 1 : 0],
+                      margin: "1vh 0 0 0",
+                    }}
+                  />
+                ))}
+              </Tabs>
+            </div>
+          </Grid>
+          <Grid container item spacing={0} xs={6}>
+            <Grid item xs={6}>
+              <p className="icon-tag">Subir imagen</p>
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="icon-button-file"
+                type="file"
+                onChange={(e) => {
+                  setImageSelected(e.target.files[0]);
                 }}
-                disabled
-                id="shorturl-readonly"
               />
-            </Grid>
-            <Grid item xs={6} md={9}>
-              <FormTextField
-                variant="outlined"
-                id="shorturl-input"
-                defaultValue={link_data ? link_data.short_link : null}
-                onChange={handleChangeShortLink}
-                error={validations[2]}
-                helperText={validations[2]}
-              />
-            </Grid>
-            <Grid item xs={6} className="tags">
-              <p className="icon-tag">Tags</p>
-              <div className={classes.root}>
-                <Tabs
-                  orientation="vertical"
-                  variant="scrollable"
-                  value={false}
-                  onChange={handleChangeTag}
-                  aria-label="Vertical tabs example"
-                  className={classes.tabs}
-                  scrollButtons="on"
+              <label htmlFor="icon-button-file">
+                <IconButton
+                  aria-label="upload-image"
+                  className="icon-btn"
+                  component="span"
                 >
-                  {link_tags.map((tag, id) => (
-                    <Tab
-                      key={id}
-                      label={tag}
-                      {...a11yProps(id)}
-                      style={{
-                        backgroundColor:
-                          tag_color[link_data.tags.includes(tag) ? 1 : 0],
-                        color: tag_text[link_data.tags.includes(tag) ? 1 : 0],
-                        margin: "1vh 0 0 0",
-                      }}
-                    />
-                  ))}
-                </Tabs>
+                  <WallpaperIcon style={{ fontSize: 40 }} />
+                </IconButton>
+              </label>
+            </Grid>
+            <Grid item xs={6}>
+              <IconButton
+                aria-label="delete"
+                className="single-icon-btn"
+                onClick={deleteForm}
+              >
+                <DeleteIcon style={{ fontSize: 60 }} />
+              </IconButton>
+            </Grid>
+            <Grid item xs={6}>
+              <p className="icon-tag">Privado</p>
+              <div className="switch-private">
+                <PrivateSwitch
+                  checked={private_button_state}
+                  onChange={handleChangePrivateSwitch}
+                  name="checkedA"
+                />
               </div>
             </Grid>
-            <Grid container item spacing={0} xs={6}>
-              <Grid item xs={6}>
-                <p className="icon-tag">Subir imagen</p>
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  id="icon-button-file"
-                  type="file"
-                  onChange={(e) => {
-                    setImageSelected(e.target.files[0]);
-                  }}
+            <Grid item xs={6}>
+              <IconButton
+                aria-label="submit"
+                className="single-icon-btn"
+                onClick={submitForms}
+              >
+                <CheckCircleIcon
+                  style={{ fontSize: 60, color: blue_color }}
                 />
-                <label htmlFor="icon-button-file">
-                  <IconButton
-                    aria-label="upload-image"
-                    className="icon-btn"
-                    component="span"
-                  >
-                    <WallpaperIcon style={{ fontSize: 40 }} />
-                  </IconButton>
-                </label>
-              </Grid>
-              <Grid item xs={6}>
-                <IconButton
-                  aria-label="delete"
-                  className="single-icon-btn"
-                  onClick={deleteForm}
-                >
-                  <DeleteIcon style={{ fontSize: 60 }} />
-                </IconButton>
-              </Grid>
-              <Grid item xs={6}>
-                <p className="icon-tag">Privado</p>
-                <div className="switch-private">
-                  <PrivateSwitch
-                    checked={private_button_state}
-                    onChange={handleChangePrivateSwitch}
-                    name="checkedA"
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={6}>
-                <IconButton
-                  aria-label="submit"
-                  className="single-icon-btn"
-                  onClick={submitForms}
-                >
-                  <CheckCircleIcon
-                    style={{ fontSize: 60, color: blue_color }}
-                  />
-                </IconButton>
-              </Grid>
+              </IconButton>
             </Grid>
           </Grid>
-        </form>
-      </Modal>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={isSnackbarOpened}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackBar}
-      >
-        <Alert onClose={handleCloseSnackBar} severity="success">
-          {snackBarMessage}
-        </Alert>
-      </Snackbar>
-    </>
+        </Grid>
+      </form>
+    </Modal>
   );
 }
