@@ -20,6 +20,7 @@ import {
   selectShowZeroState,
   selectShowNoResults,  
 } from "../../store/links";
+import { getUserType } from "../../store/auth"
 import { getAllLinks as getAllLinksApiRequest } from "../../scripts/apiScripts";
 
 import CreateLinkForm from "../CreateLinkForm";
@@ -45,7 +46,17 @@ const LinkCardsSection = () => {
   useEffect(() => {
     dispatch(setIsLoadingLinks({ isLoading: true }));
     getAllLinksApiRequest()
-      .then((response) => dispatch(getAllLinksAction({ links: response.data })))
+      .then((response) => {
+        if (getUserType().payload === undefined) {
+          return dispatch(
+            getAllLinksAction({
+            links: response.data.filter((e) => !e.private)
+          })
+          )
+        }
+    
+        return dispatch(getAllLinksAction({ links: response.data }))
+      })
       .catch((error) => {
         dispatch(getAllLinksAction({ links: [] }));
         throw new Error(`Could not get all links.\n\nReason: ${error}`);
