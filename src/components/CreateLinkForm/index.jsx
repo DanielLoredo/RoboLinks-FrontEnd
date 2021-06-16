@@ -99,6 +99,7 @@ export default function CreateLinkForm({
   created_link_data,
   linkUpdate,
   triggerSnackbar,
+  updateLinkView
 }) {
   const classes = useStyles();
 
@@ -179,6 +180,7 @@ export default function CreateLinkForm({
           setLinkData(defaultLinkData);
           handleClose()
           triggerSnackbar("Link deleted")
+          updateLinkView()
         } else {
           throw new Error("Email-Server Error, Retry Later");
         }
@@ -215,6 +217,7 @@ export default function CreateLinkForm({
             triggerSnackbar(message)
             setLinkData(defaultLinkData)
             handleClose()
+            updateLinkView()
           } else if (result.status === 500) {
             triggerSnackbar(
               "Repeated title, URL, or short link, please change it"

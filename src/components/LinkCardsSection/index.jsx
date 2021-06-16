@@ -54,6 +54,16 @@ const LinkCardsSection = () => {
       });
   }, [dispatch]);
 
+  const getLinks = () => {
+    dispatch(setIsLoadingLinks({ isLoading: true }));
+    getAllLinksApiRequest()
+      .then((response) => dispatch(getAllLinksAction({ links: response.data })))
+      .catch((error) => {
+        dispatch(getAllLinksAction({ links: [] }));
+        throw new Error(`Could not get all links.\n\nReason: ${error}`);
+      });
+  }
+
   const handleCopySnackbar = () => {
     setSnackBarMessage("Link copied to clipboard")
     setIsSnackbarOpened(true)
@@ -104,6 +114,7 @@ const LinkCardsSection = () => {
           created_link_data={editingUrl.url}
           linkUpdate={true}
           triggerSnackbar={triggerSnackbarMessage}
+          updateLinkView={getLinks}
         />
       ) : null}
       <Snackbar
