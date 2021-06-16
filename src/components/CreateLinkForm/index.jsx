@@ -184,7 +184,7 @@ export default function CreateLinkForm({
         }
       },
       (error) => {
-        alert(`Something went wrong when deleting link! \n${error.text}`);
+        triggerSnackbar("Something went wrong when deleting link!")
       }
     );
   };
@@ -220,8 +220,8 @@ export default function CreateLinkForm({
               "Repeated title, URL, or short link, please change it"
             )
           } else {
-            alert(JSON.stringify(update, null, 4))
-            alert(JSON.stringify(result, null, 4))
+            // alert(JSON.stringify(update, null, 4))
+            // alert(JSON.stringify(result, null, 4))
             triggerSnackbar("Email-Server error, retry later")
             // throw new Error("Email-Server Error, Retry Later");
           }
