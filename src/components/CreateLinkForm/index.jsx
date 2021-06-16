@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./index.scss";
+//import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,8 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
-import Alert from "../common/Alert";
-// import { getDefaultImage } from '../../scripts/imageScript';
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
@@ -99,7 +98,7 @@ export default function CreateLinkForm({
   created_link_data,
   linkUpdate,
   triggerSnackbar,
-  updateLinkView
+  updateLinkView,
 }) {
   const classes = useStyles();
 
@@ -123,13 +122,13 @@ export default function CreateLinkForm({
   const [image_selected, setImageSelected] = useState(null);
 
   const [validations, setValidation] = useState(["", "", ""]);
-  
+
   const [link_data, setLinkData] = useState(
     created_link_data ? created_link_data : defaultLinkData
   );
 
   const handleChangeTag = (event, newValue) => {
-    const update = defaultLinkData
+    const update = defaultLinkData;
     Object.assign(update, link_data);
     let tag_update = [...update.tags];
 
@@ -178,15 +177,15 @@ export default function CreateLinkForm({
       (result) => {
         if (result.status === 200) {
           setLinkData(defaultLinkData);
-          handleClose()
-          triggerSnackbar("Link deleted")
-          updateLinkView()
+          handleClose();
+          triggerSnackbar("Link deleted");
+          updateLinkView();
         } else {
           throw new Error("Email-Server Error, Retry Later");
         }
       },
       (error) => {
-        triggerSnackbar("Something went wrong when deleting link!")
+        triggerSnackbar("Something went wrong when deleting link!");
       }
     );
   };
@@ -207,25 +206,26 @@ export default function CreateLinkForm({
         update.tags = ["contests"];
       }
 
-      update.private = private_button_state
+      update.private = private_button_state;
 
       // Cloudinary image upload
       postLink(image_selected, update, linkUpdate).then(
         (result) => {
           if (result.status === 200) {
-            let message = created_link_data != null ? "Link updated" : "Link saved"
-            triggerSnackbar(message)
-            setLinkData(defaultLinkData)
-            handleClose()
-            updateLinkView()
+            let message =
+              created_link_data != null ? "Link updated" : "Link saved";
+            triggerSnackbar(message);
+            setLinkData(defaultLinkData);
+            handleClose();
+            updateLinkView();
           } else if (result.status === 500) {
             triggerSnackbar(
               "Repeated title, URL, or short link, please change it"
-            )
+            );
           } else {
             // alert(JSON.stringify(update, null, 4))
             // alert(JSON.stringify(result, null, 4))
-            triggerSnackbar("Email-Server error, retry later")
+            triggerSnackbar("Email-Server error, retry later");
             // throw new Error("Email-Server Error, Retry Later");
           }
         },
@@ -255,12 +255,7 @@ export default function CreateLinkForm({
       aria-describedby="simple-modal-description"
     >
       <form className="LinkForm" noValidate autoComplete="off">
-        <Grid
-          container
-          justify="space-evenly"
-          alignItems="center"
-          spacing={2}
-        >
+        <Grid container justify="space-evenly" alignItems="center" spacing={2}>
           <Grid item xs={12}>
             <FormTextField
               label="Link Title"
@@ -380,9 +375,7 @@ export default function CreateLinkForm({
                 className="single-icon-btn"
                 onClick={submitForms}
               >
-                <CheckCircleIcon
-                  style={{ fontSize: 60, color: blue_color }}
-                />
+                <CheckCircleIcon style={{ fontSize: 60, color: blue_color }} />
               </IconButton>
             </Grid>
           </Grid>

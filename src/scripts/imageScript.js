@@ -8,37 +8,56 @@ export const postLink = async (file, update, linkUpdate) => {
 
     return updateLink(update.id, update);
   } else {
-    const data = new FormData();
     let imageUrl = "";
-    data.append("file", file);
-    data.append("upload_preset", "idvc02qa");
-    data.append("cloud_name", "dyhu4pqet");
 
-    //MISSING RETURN
-    return fetch(BACK_HOST_NAME, {
-      method: "post",
-      body: data,
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        imageUrl = data.url;
-        update.short_link = `http://rbgs.xyz/${update.short_link}`;
+    if (file === null) {
+      console.log(update.tags);
+      imageUrl = getDefaultImage(update.tags[0]);
+      update.short_link = `http://rbgs.xyz/${update.short_link}`;
 
-        if (linkUpdate === true) {
-          update.short_url = `http://rbgs.xyz/${update.short_link}`;
+      return createLink(
+        update.URL,
+        update.short_link,
+        update.title,
+        update.private,
+        imageUrl,
+        update.tags
+      );
+    } else {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "idvc02qa");
+      data.append("cloud_name", "dyhu4pqet");
 
-          updateLink(update.id, { ...update, image: imageUrl });
-        } else {
-          return createLink(
-            update.URL,
-            update.short_link,
-            update.title,
-            update.private,
-            imageUrl,
-            update.tags
-          );
-        }
-      });
+      //MISSING RETURN
+      return fetch(BACK_HOST_NAME, {
+        method: "post",
+        body: data,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          imageUrl = data.url;
+
+          if (linkUpdate === true) {
+            if (update.short_url.startsWith("http://rbgs.xyz/")) {
+              update.short_url = update.short_link;
+            } else {
+              update.short_url = `http://rbgs.xyz/${update.short_link}`;
+            }
+            return updateLink(update.id, { ...update, image: imageUrl });
+          } else {
+            update.short_url = `http://rbgs.xyz/${update.short_link}`;
+            return createLink(
+              update.URL,
+              update.short_url,
+              update.title,
+              update.private,
+              imageUrl,
+              update.tags
+            );
+          }
+        });
+    }
   }
 };
 
