@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import "./index.scss";
 import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
@@ -12,10 +13,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { postLink } from "../../scripts/imageScript";
 import { deleteLink } from "../../scripts/apiScripts";
+import { removeLink, createLink, updateLink } from "../../store/links";
 
 import { blue_color, baby_blue, deep_blue } from "../colors";
 
-const link_tags = [
+export const link_tags = [
   "github",
   "presentation",
   "workshop",
@@ -98,7 +100,7 @@ export default function CreateLinkForm({
   linkUpdate,
 }) {
   const classes = useStyles();
-  console.log(created_link_data);
+  const dispatch = useDispatch();
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
@@ -132,7 +134,6 @@ export default function CreateLinkForm({
     } else {
       tag_update.push(link_tags[newValue]);
     }
-    console.log(tag_update);
     update.tags = tag_update;
     setLinkData(update);
   };
@@ -160,18 +161,26 @@ export default function CreateLinkForm({
   };
 
   const deleteForm = () => {
+    const payload = { id: created_link_data.id };
+    dispatch(removeLink(payload));
     deleteLink(created_link_data.id);
     alert("Delete data");
   };
 
-  const submitForms = () => {
-    // TODO: add POST function request and send json to backend
+  const submitForms = async () => {
     let update = link_data;
     update.tags = link_data.tags;
     update.private = private_button_state;
 
     // Cloudinary image upload
-    postLink(image_selected, update, linkUpdate);
+    const newLink = await postLink(image_selected, update, linkUpdate);
+    const payload = { link: newLink[0] };
+    if (!linkUpdate) {
+      dispatch(createLink(payload));
+    } else {
+      console.log(payload);
+      dispatch(updateLink(payload));
+    }
   };
 
   return (

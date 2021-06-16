@@ -1,18 +1,14 @@
-import { createLink, updateLink } from "./apiScripts";
+import { createLink, updateLink, getAllLinks } from "./apiScripts";
 
 const BACK_HOST_NAME = "https://api.cloudinary.com/v1_1/dyhu4pqet/image/upload";
 
-export const postLink = (file, update, linkUpdate) => {
-  console.log(update);
+export const postLink = async (file, update, linkUpdate) => {
   if (linkUpdate === true && file === null) {
     update.short_url = `http://rbgs.xyz/${update.short_link}`;
     updateLink(update.id, update);
   } else {
-    let imageUrl = "";
-
     if (file === null) {
-      console.log(update.tags);
-      imageUrl = getDefaultImage(update.tags[0]);
+      update.imageUrl = getDefaultImage(update.tags[0]);
       update.short_link = `http://rbgs.xyz/${update.short_link}`;
 
       createLink(
@@ -20,7 +16,7 @@ export const postLink = (file, update, linkUpdate) => {
         update.short_link,
         update.title,
         update.private,
-        imageUrl,
+        update.imageUrl,
         update.tags
       );
     } else {
@@ -34,25 +30,30 @@ export const postLink = (file, update, linkUpdate) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          imageUrl = data.url;
+          update.imageUrl = data.url;
           update.short_link = `http://rbgs.xyz/${update.short_link}`;
 
           if (linkUpdate === true) {
             update.short_url = `http://rbgs.xyz/${update.short_link}`;
-            updateLink(update.id, { ...update, image: imageUrl });
+            updateLink(update.id, { ...update, image: update.imageUrl });
           } else {
             createLink(
               update.URL,
               update.short_link,
               update.title,
               update.private,
-              imageUrl,
+              update.imageUrl,
               update.tags
             );
           }
         });
     }
   }
+
+  //RETRIEVE CREATED LINK
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // 3 sec
+  const links = await getAllLinks({ short_url: update.short_link });
+  return links.data;
 };
 
 export function getDefaultImage(tag) {
