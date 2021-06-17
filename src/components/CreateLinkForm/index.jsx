@@ -92,38 +92,44 @@ function getModalStyle() {
 }
 
 export default function CreateLinkForm({
-  created_link_data,
   open,
   handleClose,
+  created_link_data,
   linkUpdate,
+  triggerSnackbar,
+  updateLinkView,
 }) {
   const classes = useStyles();
-  console.log(created_link_data);
 
   const tag_color = ["transparent", blue_color];
   const tag_text = [blue_color, deep_blue];
+  const defaultLinkData = {
+    title: "",
+    URL: "",
+    short_link: "",
+    tags: [],
+    private: false,
+  };
 
   const [private_button_state, setPrivateButtonState] = useState(
-    created_link_data ? created_link_data.private : null
+    created_link_data ? created_link_data.private : false
   );
 
-  const [link_data, setLinkData] = useState(
-    created_link_data ? created_link_data : null
-  );
   // getModalStyle is not a pure function, we roll the style only on the first render
+  const [edited, setEdited] = useState(false);
+
   const [modalStyle] = useState(getModalStyle);
 
   const [image_selected, setImageSelected] = useState(null);
 
+  const [validations, setValidation] = useState(["", "", ""]);
+
+  const [link_data, setLinkData] = useState(
+    created_link_data ? created_link_data : defaultLinkData
+  );
+
   const handleChangeTag = (event, newValue) => {
-    //let tags = link_data.tags ? link_data.tags:[];
-    const update = {
-      title: "",
-      URL: "",
-      short_link: "ROS",
-      tags: [],
-      private: false,
-    };
+    const update = defaultLinkData;
     Object.assign(update, link_data);
     let tag_update = [...update.tags];
 
@@ -135,6 +141,7 @@ export default function CreateLinkForm({
     console.log(tag_update);
     update.tags = tag_update;
     setLinkData(update);
+    setEdited(true);
   };
 
   const handleChangePrivateSwitch = (event) => {
@@ -145,33 +152,102 @@ export default function CreateLinkForm({
     let update = link_data;
     update.title = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations];
+    validations_update[0] = "";
+    setValidation(validations_update);
+    setEdited(true);
   };
 
   const handleChangeURL = (event) => {
     let update = link_data;
     update.URL = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations];
+    validations_update[1] = "";
+    setValidation(validations_update);
+    setEdited(true);
   };
 
   const handleChangeShortLink = (event) => {
     let update = link_data;
     update.short_link = event.target.value;
     setLinkData(update);
+    let validations_update = [...validations];
+    validations_update[2] = "";
+    setValidation(validations_update);
+    setEdited(true);
   };
 
   const deleteForm = () => {
-    deleteLink(created_link_data.id);
-    alert("Delete data");
+    deleteLink(created_link_data.id).then(
+      (result) => {
+        if (result.status === 200) {
+          setLinkData(defaultLinkData);
+          handleClose();
+          triggerSnackbar("Link deleted");
+          setEdited(false);
+          updateLinkView();
+        } else {
+          throw new Error("Email-Server Error, Retry Later");
+        }
+      },
+      (error) => {
+        throw new Error("Something went wrong when deleting link!");
+      }
+    );
   };
 
   const submitForms = () => {
-    // TODO: add POST function request and send json to backend
-    let update = link_data;
-    update.tags = link_data.tags;
-    update.private = private_button_state;
+    if (!edited) {
+      handleClose();
+      setEdited(false);
+      return;
+    }
 
-    // Cloudinary image upload
-    postLink(image_selected, update, linkUpdate);
+    if (link_data.title && link_data.URL && link_data.short_link) {
+      let update = link_data;
+
+      update.tags = link_data.tags;
+
+      //If the user didn´t chose a tag, one is given by default
+      if (update.tags.length === 0) {
+        update.tags = ["contests"];
+      }
+
+      update.private = private_button_state;
+
+      postLink(image_selected, update, linkUpdate).then(
+        (result) => {
+          if (result.status === 200) {
+            let message =
+              created_link_data != null ? "Link updated" : "Link saved";
+            triggerSnackbar(message);
+            setLinkData(defaultLinkData);
+            handleClose();
+            updateLinkView();
+            setEdited(false);
+          } else if (result.status === 500) {
+            triggerSnackbar(
+              "Repeated title, URL, or short link, please change it"
+            );
+          } else {
+            throw new Error("Email-Server error, retry later");
+          }
+        },
+        (error) => {
+          throw new Error(
+            `Something went wrong when saving link! \n${error.text}`
+          );
+        }
+      );
+    } else {
+      let title_helperText = link_data.title ? "" : "Please fill title";
+      let short_link_helperText = link_data.short_link
+        ? ""
+        : "Please fill short link";
+      let url_helperText = link_data.URL ? "" : "Please fill URL";
+      setValidation([title_helperText, short_link_helperText, url_helperText]);
+    }
   };
 
   return (
@@ -192,6 +268,8 @@ export default function CreateLinkForm({
               id="link-title-input"
               defaultValue={link_data ? link_data.title : ""}
               onChange={handleChangeTitle}
+              error={validations[0]}
+              helperText={validations[0]}
             />
           </Grid>
           <Grid item xs={12}>
@@ -200,8 +278,10 @@ export default function CreateLinkForm({
               variant="outlined"
               id="url-input"
               defaultValue={link_data ? link_data.URL : ""}
-              disabled={/*link_data ? true : */ false}
+              disabled={created_link_data ? true : false}
               onChange={handleChangeURL}
+              error={validations[1]}
+              helperText={validations[1]}
             />
           </Grid>
           <Grid item xs={6} md={3}>
@@ -221,6 +301,8 @@ export default function CreateLinkForm({
               id="shorturl-input"
               defaultValue={link_data ? link_data.short_link : null}
               onChange={handleChangeShortLink}
+              error={validations[2]}
+              helperText={validations[2]}
             />
           </Grid>
           <Grid item xs={6} className="tags">
