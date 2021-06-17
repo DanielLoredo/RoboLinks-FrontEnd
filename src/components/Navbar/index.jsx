@@ -4,7 +4,7 @@ import "./index.scss";
 
 import SearchLinks from "./SearchLinks";
 import SignUser from "./SignUser";
-
+// Comment
 const Navbar = () => (
   <div className="Navbar">
     <img
