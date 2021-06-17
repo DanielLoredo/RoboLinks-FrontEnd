@@ -3,9 +3,11 @@ import { useDispatch } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
+import Snackbar from "@material-ui/core/Snackbar";
 import MenuItem from "@material-ui/core/MenuItem";
 import { GoogleLogin } from "react-google-login";
 import { AccountCircle } from "@material-ui/icons";
+import Alert from "../common/Alert";
 
 import { getUserType as getUserTypeAction } from "../../store/auth";
 import { getUserTypeByEmail } from "../../scripts/apiScripts";
@@ -55,17 +57,34 @@ function SignUser() {
   const [signedIn, setSignedIn] = React.useState(false);
   const user = useSelector(selectUser);
 
+  const [isSnackbarOpened, setIsSnackbarOpened] = React.useState(false);
+  const [userImage, setUserImage] = React.useState(null);
+
   const responseGoogle = (response) => {
+    setUserImage(response.profileObj.imageUrl);
+
     let userEmail = response.profileObj.email;
     getUserTypeByEmail(userEmail)
       .then((response) => {
-        dispatch(getUserTypeAction({ auth: response.data }));
-        setSignedIn(true);
+        if (response.res) {
+          dispatch(getUserTypeAction({ auth: response.data }));
+          setSignedIn(true);
+        } else {
+          dispatch(getUserTypeAction({ auth: "no_access" }));
+          setIsSnackbarOpened(true);
+        }
       })
       .catch((error) => {
         throw new Error(`Could not get the user type.\n\nReason: ${error}`);
       });
     setAnchorEl(null);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setIsSnackbarOpened(false);
   };
 
   const handleClick = (event) => {
@@ -78,19 +97,31 @@ function SignUser() {
 
   return (
     <div>
-      <StyledButton
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        startIcon={
-          <AccountCircle
-            alt="Avatar fallback icon"
-            className={
-              signedIn ? "Navbar-avatar Navbar-avatar-logged" : "Navbar-avatar"
-            }
-          />
-        }
-      ></StyledButton>
+      {
+        <StyledButton
+          aria-controls="customized-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          startIcon={
+            signedIn === false ? (
+              <AccountCircle
+                alt="Avatar fallback icon"
+                className={
+                  signedIn
+                    ? "Navbar-avatar Navbar-avatar-logged"
+                    : "Navbar-avatar"
+                }
+              />
+            ) : (
+              <img
+                className="Navbar-avatar Navbar-avatar-user"
+                src={userImage}
+                alt="Avatar"
+              />
+            )
+          }
+        ></StyledButton>
+      }
       {signedIn === false && (
         <StyledMenu
           id="customized-menu"
@@ -108,6 +139,20 @@ function SignUser() {
           </MenuItem>
         </StyledMenu>
       )}
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={isSnackbarOpened}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          Account does not have access
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

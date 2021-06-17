@@ -20,7 +20,10 @@ import {
   selectShowZeroState,
   selectShowNoResults,
 } from "../../store/links";
+import { getUserType } from "../../store/auth";
 import { getAllLinks as getAllLinksApiRequest } from "../../scripts/apiScripts";
+
+import { selectUser } from "../../store/auth/selectors";
 
 import CreateLinkForm from "../CreateLinkForm";
 
@@ -30,6 +33,8 @@ const LinkCardsSection = () => {
   const showLinksCollection = useSelector(selectShowLinksCollection);
   const showZeroState = useSelector(selectShowZeroState);
   const showNoResults = useSelector(selectShowNoResults);
+
+  const user = useSelector(selectUser);
 
   const linksContainerRef = useRef(null);
   // NOTE: no need for debounceTime, to minize update time as much as possible
@@ -47,12 +52,22 @@ const LinkCardsSection = () => {
   useEffect(() => {
     dispatch(setIsLoadingLinks({ isLoading: true }));
     getAllLinksApiRequest()
-      .then((response) => dispatch(getAllLinksAction({ links: response.data })))
+      .then((response) => {
+        if (user === "no_access") {
+          return dispatch(
+            getAllLinksAction({
+              links: response.data.filter((e) => !e.private),
+            })
+          );
+        }
+
+        return dispatch(getAllLinksAction({ links: response.data }));
+      })
       .catch((error) => {
         dispatch(getAllLinksAction({ links: [] }));
         throw new Error(`Could not get all links.\n\nReason: ${error}`);
       });
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   const getLinks = () => {
     dispatch(setIsLoadingLinks({ isLoading: true }));

@@ -1,7 +1,9 @@
 
 @import '/src/components/colors.scss';
+@import '/src/components/media-queries-triggers.scss';
 
 $add-link-icon-size: 85px;
+$add-link-icon-size--mobile: 70px;
 
 
 // NOTE: Prefix Links-section is needed to provide enough specificity
@@ -17,4 +19,14 @@ $add-link-icon-size: 85px;
     width: $add-link-icon-size;
     height: $add-link-icon-size;
   }
+
+  @media screen and (max-width: $screen-width--mobile) {
+    right: 5px;
+    bottom: 5px;
+
+    .Links-add-icon {
+      width: $add-link-icon-size--mobile;
+      height: $add-link-icon-size--mobile;
+    }
+  }     
 }

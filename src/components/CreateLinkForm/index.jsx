@@ -117,7 +117,7 @@ export default function CreateLinkForm({
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [edited, setEdited] = useState(false);
-  
+
   const [modalStyle] = useState(getModalStyle);
 
   const [image_selected, setImageSelected] = useState(null);
@@ -138,9 +138,10 @@ export default function CreateLinkForm({
     } else {
       tag_update.push(link_tags[newValue]);
     }
+    console.log(tag_update);
     update.tags = tag_update;
     setLinkData(update);
-    setEdited(true)
+    setEdited(true);
   };
 
   const handleChangePrivateSwitch = (event) => {
@@ -154,7 +155,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[0] = "";
     setValidation(validations_update);
-    setEdited(true)
+    setEdited(true);
   };
 
   const handleChangeURL = (event) => {
@@ -164,7 +165,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[1] = "";
     setValidation(validations_update);
-    setEdited(true)
+    setEdited(true);
   };
 
   const handleChangeShortLink = (event) => {
@@ -174,7 +175,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[2] = "";
     setValidation(validations_update);
-    setEdited(true)
+    setEdited(true);
   };
 
   const deleteForm = () => {
@@ -184,7 +185,7 @@ export default function CreateLinkForm({
           setLinkData(defaultLinkData);
           handleClose();
           triggerSnackbar("Link deleted");
-          setEdited(false)
+          setEdited(false);
           updateLinkView();
         } else {
           throw new Error("Email-Server Error, Retry Later");
@@ -197,10 +198,10 @@ export default function CreateLinkForm({
   };
 
   const submitForms = () => {
-    if(!edited){
+    if (!edited) {
       handleClose();
-      setEdited(false)
-      return
+      setEdited(false);
+      return;
     }
 
     if (link_data.title && link_data.URL && link_data.short_link) {
@@ -224,7 +225,7 @@ export default function CreateLinkForm({
             setLinkData(defaultLinkData);
             handleClose();
             updateLinkView();
-            setEdited(false)
+            setEdited(false);
           } else if (result.status === 500) {
             triggerSnackbar(
               "Repeated title, URL, or short link, please change it"
