@@ -200,6 +200,7 @@ export default function CreateLinkForm({
     if(!edited){
       handleClose();
       setEdited(false)
+      return
     }
 
     if (link_data.title && link_data.URL && link_data.short_link) {
