@@ -41,7 +41,7 @@ Alexis Zugasti       | @alexisavz          | Designer
 	```
 - - - -
 ## Running the project
-In terminal, run:
+In terminal run:
 
  ```bash
 	$ npm start
