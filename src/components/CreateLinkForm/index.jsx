@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./index.scss";
-//import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import IconButton from "@material-ui/core/IconButton";
@@ -117,6 +116,8 @@ export default function CreateLinkForm({
   );
 
   // getModalStyle is not a pure function, we roll the style only on the first render
+  const [edited, setEdited] = useState(false);
+  
   const [modalStyle] = useState(getModalStyle);
 
   const [image_selected, setImageSelected] = useState(null);
@@ -139,6 +140,7 @@ export default function CreateLinkForm({
     }
     update.tags = tag_update;
     setLinkData(update);
+    setEdited(true)
   };
 
   const handleChangePrivateSwitch = (event) => {
@@ -152,6 +154,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[0] = "";
     setValidation(validations_update);
+    setEdited(true)
   };
 
   const handleChangeURL = (event) => {
@@ -161,6 +164,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[1] = "";
     setValidation(validations_update);
+    setEdited(true)
   };
 
   const handleChangeShortLink = (event) => {
@@ -170,6 +174,7 @@ export default function CreateLinkForm({
     let validations_update = [...validations];
     validations_update[2] = "";
     setValidation(validations_update);
+    setEdited(true)
   };
 
   const deleteForm = () => {
@@ -179,22 +184,23 @@ export default function CreateLinkForm({
           setLinkData(defaultLinkData);
           handleClose();
           triggerSnackbar("Link deleted");
+          setEdited(false)
           updateLinkView();
         } else {
           throw new Error("Email-Server Error, Retry Later");
         }
       },
       (error) => {
-        triggerSnackbar("Something went wrong when deleting link!");
+        throw new Error("Something went wrong when deleting link!");
       }
     );
   };
 
   const submitForms = () => {
-    // Function that makes a POST to the project's database
-    // if (image_selected === "") {
-    //   setImageSelected(getDefaultImage(link_data.tags[0]))
-    // }
+    if(!edited){
+      handleClose();
+      setEdited(false)
+    }
 
     if (link_data.title && link_data.URL && link_data.short_link) {
       let update = link_data;
@@ -208,7 +214,6 @@ export default function CreateLinkForm({
 
       update.private = private_button_state;
 
-      // Cloudinary image upload
       postLink(image_selected, update, linkUpdate).then(
         (result) => {
           if (result.status === 200) {
@@ -218,19 +223,17 @@ export default function CreateLinkForm({
             setLinkData(defaultLinkData);
             handleClose();
             updateLinkView();
+            setEdited(false)
           } else if (result.status === 500) {
             triggerSnackbar(
               "Repeated title, URL, or short link, please change it"
             );
           } else {
-            // alert(JSON.stringify(update, null, 4))
-            // alert(JSON.stringify(result, null, 4))
-            triggerSnackbar("Email-Server error, retry later");
-            // throw new Error("Email-Server Error, Retry Later");
+            throw new Error("Email-Server error, retry later");
           }
         },
         (error) => {
-          triggerSnackbar(
+          throw new Error(
             `Something went wrong when saving link! \n${error.text}`
           );
         }
