@@ -184,7 +184,7 @@ export default function CreateLinkForm({
         if (result.status === 200) {
           setLinkData(defaultLinkData);
           handleClose();
-          triggerSnackbar("Link deleted");
+          triggerSnackbar("Link deleted", "success");
           setEdited(false);
           updateLinkView();
         } else {
@@ -221,14 +221,14 @@ export default function CreateLinkForm({
           if (result.status === 200) {
             let message =
               created_link_data != null ? "Link updated" : "Link saved";
-            triggerSnackbar(message);
+            triggerSnackbar(message, "success");
             setLinkData(defaultLinkData);
             handleClose();
             updateLinkView();
             setEdited(false);
           } else if (result.status === 500) {
             triggerSnackbar(
-              "Repeated title, URL, or short link, please change it"
+              "Repeated title, URL, or short link, please change it", "error"
             );
           } else {
             throw new Error("Email-Server error, retry later");
@@ -246,7 +246,7 @@ export default function CreateLinkForm({
         ? ""
         : "Please fill short link";
       let url_helperText = link_data.URL ? "" : "Please fill URL";
-      setValidation([title_helperText, short_link_helperText, url_helperText]);
+      setValidation([title_helperText, url_helperText, short_link_helperText]);
     }
   };
 
