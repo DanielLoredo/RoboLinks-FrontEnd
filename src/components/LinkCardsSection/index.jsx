@@ -46,6 +46,8 @@ const LinkCardsSection = () => {
 
   const [snackBarMessage, setSnackBarMessage] = useState("");
 
+  const [severity, setSeverity] = useState("success")
+
   // Request all links data to API.
   // If the request succeeds, the data is stored in the redux-store through an Action.
   // Otherwise, an Error is thrown.
@@ -102,7 +104,8 @@ const LinkCardsSection = () => {
     });
   };
 
-  const triggerSnackbarMessage = (message) => {
+  const triggerSnackbarMessage = (message, severity) => {
+    setSeverity(severity)
     setSnackBarMessage(message);
     setIsSnackbarOpened(true);
   };
@@ -141,7 +144,7 @@ const LinkCardsSection = () => {
         autoHideDuration={3000}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="success">
+        <Alert onClose={handleClose} severity={severity}>
           {snackBarMessage}
         </Alert>
       </Snackbar>
